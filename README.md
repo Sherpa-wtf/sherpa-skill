@@ -10,39 +10,59 @@ La skill no es una frontera de seguridad y no contiene credenciales.
 
 ## Qué necesitás
 
-1. Un **`everestApiKey`** de Sherpa (se crea en el frontend de Sherpa, gateado por permisos).
-2. El **servidor MCP de Sherpa** conectado en tu agente, autenticado con esa key. Con una key de
-   broker, la skill solo puede ver y editar **tus propios bots**.
+1. Un **`everestApiKey`** de Sherpa (se crea en el frontend de Sherpa, gateado por permisos). Con
+   una key de broker, la skill solo puede ver y editar **tus propios bots**.
+2. El **servidor MCP de Sherpa** conectado en tu agente, autenticado con esa key.
 
-> URL del MCP de Sherpa: `https://mcp-production-602d.up.railway.app/mcp` (expone read + write).
+> MCP de Sherpa: `https://mcp-production-602d.up.railway.app/mcp` (expone read + write).
 
 ## Instalación
 
-### Cualquier host del estándar (skills.sh)
+### Opción 1 — Claude Code, en un paso (skill + MCP juntos)
+
+Instala la skill **y** registra la conexión al MCP de una sola vez:
+
+```bash
+# 1. exportá tu key (no se guarda en el repo; la lee la config del MCP por variable de entorno)
+export SHERPA_API_KEY="evr_pk_...tu-everestApiKey..."
+
+# 2. agregá el marketplace e instalá el plugin
+/plugin marketplace add Sherpa-wtf/sherpa-skill
+/plugin install sherpa-bot-optimizer@sherpa-wtf
+```
+
+La skill queda disponible (namespaced como `/sherpa-bot-optimizer:sherpa-bot-optimizer`) y el MCP
+`sherpa` queda conectado con tu key vía el header `Authorization: Bearer ${SHERPA_API_KEY}`.
+
+### Opción 2 — Cualquier host del estándar (skills.sh)
+
+Instala **solo la skill** (la conexión al MCP va aparte, abajo):
 
 ```bash
 npx skills add Sherpa-wtf/sherpa-skill
 ```
 
-(Instala los archivos de la skill en `.claude/skills/` o el equivalente del host. No configura el
-MCP — eso va aparte, abajo.)
+No hay formulario de publicación: el repo público + este comando alcanzan; skills.sh la lista
+automáticamente por telemetría de instalación.
 
-### Manual (cualquier agente)
+### Opción 3 — Manual (cualquier agente)
 
-Copiá esta carpeta a la ubicación de skills de tu host (ej. `~/.claude/skills/sherpa-bot-optimizer/`)
-manteniendo `SKILL.md` y `reference/` juntos.
+Copiá `skills/sherpa-bot-optimizer/` a la ubicación de skills de tu host (ej.
+`~/.claude/skills/sherpa-bot-optimizer/`), manteniendo `SKILL.md` y `reference/` juntos.
 
-### Conectar el MCP de Sherpa
+### Conectar el MCP (para las opciones 2 y 3)
 
 - **Claude Code:**
   ```bash
   claude mcp add --transport http sherpa https://mcp-production-602d.up.railway.app/mcp \
     --header "Authorization: Bearer <tu-everestApiKey>"
   ```
-- **Codex / otros hosts:** agregá el MCP en la config del host apuntando a la misma URL HTTP, con el
-  header `Authorization: Bearer <tu-everestApiKey>`.
-- **claude.ai:** agregar como Custom Connector (MCP remoto). _Puede requerir OAuth en el MCP; ver
-  estado en el repo de Genesis._
+  > Si tu versión de Claude Code no manda el header (bug conocido en algunas versiones),
+  > actualizá la CLI.
+- **Codex / otros hosts del estándar MCP:** agregá el servidor en la config del host apuntando a la
+  misma URL HTTP, con el header `Authorization: Bearer <tu-everestApiKey>`.
+- **claude.ai:** **no soportado por ahora.** Los Custom Connectors de claude.ai exigen OAuth 2.0;
+  no aceptan un Bearer estático. Se habilitará cuando el MCP exponga OAuth.
 
 ## Seguridad
 
@@ -51,14 +71,22 @@ manteniendo `SKILL.md` y `reference/` juntos.
 - **Dos gates humanos:** aprobación antes de crear/editar el borrador, y antes de publicar.
 - La skill nunca toca el bot vivo directo: edita un **borrador** y publica con confirmación explícita.
 - La skill es procedimiento, **no** una frontera de seguridad: el perímetro real es el MCP + Genesis.
+- La key nunca se commitea: en la opción 1 viaja por la variable de entorno `SHERPA_API_KEY`.
 
-## Estructura
+## Estructura del repo
 
 ```
-SKILL.md                       máquina de estados (2 gates, fail-closed) + reglas de seguridad
-reference/analysis-playbook.md cómo analizar conversaciones → recomendaciones
-reference/flow-editing.md      schemas + ejemplos de cada tool, flowPath, errores/concurrencia
-reference/mcp-connection.md    prerequisito del MCP conectado
+.claude-plugin/
+  plugin.json                 manifiesto del plugin de Claude Code
+  marketplace.json            marketplace de un plugin (source: "./")
+.mcp.json                     servidor MCP de Sherpa (Bearer por ${SHERPA_API_KEY})
+skills/sherpa-bot-optimizer/
+  SKILL.md                    máquina de estados (2 gates, fail-closed) + reglas de seguridad
+  reference/analysis-playbook.md
+  reference/flow-editing.md
+  reference/mcp-connection.md
+README.md
+LICENSE
 ```
 
 ## Licencia

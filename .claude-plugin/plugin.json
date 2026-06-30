@@ -1,0 +1,10 @@
+{
+  "name": "sherpa-bot-optimizer",
+  "version": "0.1.0",
+  "description": "Analiza las conversaciones de un bot de Sherpa y mejora sus flujos de forma segura (2 gates humanos, fail-closed) vía el MCP de Sherpa.",
+  "author": { "name": "Sherpa", "email": "dev@sherpa.wtf" },
+  "homepage": "https://github.com/Sherpa-wtf/sherpa-skill",
+  "repository": "https://github.com/Sherpa-wtf/sherpa-skill",
+  "license": "MIT",
+  "keywords": ["sherpa", "mcp", "agent-skill", "chatbot", "whatsapp", "flows"]
+}

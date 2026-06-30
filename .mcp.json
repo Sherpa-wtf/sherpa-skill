@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "sherpa": {
+      "type": "http",
+      "url": "https://mcp-production-602d.up.railway.app/mcp",
+      "headers": {
+        "Authorization": "Bearer ${SHERPA_API_KEY}"
+      }
+    }
+  }
+}

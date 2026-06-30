@@ -1,0 +1,12 @@
+{
+  "name": "sherpa-wtf",
+  "description": "Skills de Sherpa para operar Genesis (analizar conversaciones, editar flujos) vía el MCP de Sherpa.",
+  "owner": { "name": "Sherpa", "email": "dev@sherpa.wtf" },
+  "plugins": [
+    {
+      "name": "sherpa-bot-optimizer",
+      "source": "./",
+      "description": "Skill + MCP de Sherpa: analiza conversaciones y edita flujos de un bot, con dos gates de aprobación humana."
+    }
+  ]
+}
