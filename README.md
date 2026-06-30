@@ -14,7 +14,7 @@ La skill no es una frontera de seguridad y no contiene credenciales.
 2. El **servidor MCP de Sherpa** conectado en tu agente, autenticado con esa key. Con una key de
    broker, la skill solo puede ver y editar **tus propios bots**.
 
-> URL del MCP de Sherpa: `https://<TU-MCP-DE-SHERPA>/mcp`  ← completar con la URL real desplegada.
+> URL del MCP de Sherpa: `https://mcp-production-602d.up.railway.app/mcp` (expone read + write).
 
 ## Instalación
 
@@ -36,7 +36,7 @@ manteniendo `SKILL.md` y `reference/` juntos.
 
 - **Claude Code:**
   ```bash
-  claude mcp add --transport http sherpa https://<TU-MCP-DE-SHERPA>/mcp \
+  claude mcp add --transport http sherpa https://mcp-production-602d.up.railway.app/mcp \
     --header "Authorization: Bearer <tu-everestApiKey>"
   ```
 - **Codex / otros hosts:** agregá el MCP en la config del host apuntando a la misma URL HTTP, con el
