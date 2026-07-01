@@ -15,10 +15,16 @@ apruebe.
 ## Precondiciones (chequear primero; si falla alguna, PARAR y avisar al usuario)
 
 - El servidor MCP de Sherpa está conectado y estas tools están disponibles:
-  `whoami`, `list_bots`, `get_bot_conversations`, `get_contact_conversation`,
-  `get_conversation_transcript`, `get_bot_transcripts`, `get_bot_flows`,
-  `create_flow_draft`, `update_flow_subflow`, `update_flow_questions`,
-  `update_flow_copies`, `preview_flow_draft`, `publish_flow_draft`.
+  - Identidad/bots: `whoami`, `list_bots`
+  - **Leer conversaciones desde Chatwoot (cobertura de TODOS los bots — usar por defecto):**
+    `get_chatwoot_bot_conversations`, `get_chatwoot_contact_conversations`,
+    `get_chatwoot_conversation_messages`, `get_chatwoot_broker_conversations`
+  - Leer conversaciones desde Andes (resúmenes pre-computados, más barato, pero SOLO cubre bots
+    con Andes activo): `get_bot_conversations`, `get_contact_conversation`,
+    `get_conversation_transcript`, `get_bot_transcripts`
+  - Editar flujos: `get_bot_flows`, `create_flow_draft`, `update_flow_subflow`,
+    `update_flow_questions`, `update_flow_copies`, `preview_flow_draft`, `publish_flow_draft`.
+- Si falta alguna tool de Chatwoot, es un MCP viejo: pedí que lo actualicen.
 - Si falta alguna tool requerida, **PARAR**: "El servidor MCP de Sherpa no está del todo conectado
   (falta la tool X). Conectalo antes de continuar." Ver `reference/mcp-connection.md`.
 
@@ -52,9 +58,14 @@ humana son obligatorios: uno **antes de crear/editar un borrador**, otro **antes
  1. whoami                          → confirmar identidad y alcance (self = solo tus propios bots)
  2. list_bots                       → elegir el bot; si es ambiguo, PREGUNTAR al humano cuál
  3. elegir un rango de fechas       → si no lo dieron, PREGUNTAR (ej. "últimos 7 días")
- 4. get_bot_conversations(summary)  → leer el período en RESÚMENES (barato; no traigas full todavía)
- 5. (opcional) get_conversation_transcript / get_bot_transcripts
-                                     → SOLO para las pocas sesiones que requieren lectura profunda
+ 4. get_chatwoot_bot_conversations  → LISTAR las conversaciones del bot (Chatwoot). Cubre TODOS los
+                                     bots, incluidos los que NO tienen Andes. Paginá con `page`.
+                                     (Alternativa más barata SOLO si el bot tiene Andes activo:
+                                      get_bot_conversations(summary) = resúmenes pre-computados. Pero si
+                                      da total:0 / 0 sesiones, el bot NO tiene Andes → usá el de Chatwoot.
+                                      NO concluyas "no hay conversaciones" desde las tools de Andes.)
+ 5. get_chatwoot_conversation_messages → mensajes crudos (texto) de una conversación puntual, por su
+                                     conversationId (del paso 4). Traé SOLO las que necesitás leer a fondo.
  6. producir RECOMENDACIONES        → solo texto. Sin tools de escritura todavía. Listá los cambios
                                        concretos propuestos (qué flujo, qué edición, por qué).
 

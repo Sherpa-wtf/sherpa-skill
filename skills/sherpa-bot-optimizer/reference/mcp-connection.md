@@ -9,11 +9,17 @@ El servidor MCP de Sherpa tiene que estar conectado en tu agente/host, autentica
 `everestApiKey` válido, y exponiendo estas tools:
 
 ```
-whoami, list_bots, get_bot_conversations, get_contact_conversation,
+whoami, list_bots,
+get_chatwoot_bot_conversations, get_chatwoot_contact_conversations,
+get_chatwoot_conversation_messages, get_chatwoot_broker_conversations,
+get_bot_conversations, get_contact_conversation,
 get_conversation_transcript, get_bot_transcripts, get_bot_flows,
 create_flow_draft, update_flow_subflow, update_flow_questions,
 update_flow_copies, preview_flow_draft, publish_flow_draft
 ```
+> Las `get_chatwoot_*` son las de lectura por defecto (cubren TODOS los bots). Las de Andes
+> (`get_bot_conversations`, etc.) solo cubren bots con Andes activo. Si faltan las `get_chatwoot_*`,
+> el MCP está desactualizado.
 
 Si falta alguna tool requerida, **PARAR** y avisarle al usuario que el servidor MCP no está del todo
 conectado.
