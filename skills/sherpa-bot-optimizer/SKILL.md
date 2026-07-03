@@ -24,6 +24,8 @@ apruebe.
     `get_conversation_transcript`, `get_bot_transcripts`
   - Editar flujos: `get_bot_flows`, `create_flow_draft`, `update_flow_subflow`,
     `update_flow_questions`, `update_flow_copies`, `preview_flow_draft`, `publish_flow_draft`.
+  - Voz y tono de Andes: `get_voice_tone` (leer), `update_voice_tone` (editar). Solo plan ELITE,
+    salvo 3 keys limitadas (`saludoInicial`/`despedidaFinal`/`fueraDeHorario`). Ver `reference/flow-editing.md`.
 - Si falta alguna tool de Chatwoot, es un MCP viejo: pedí que lo actualicen.
 - Si falta alguna tool requerida, **PARAR**: "El servidor MCP de Sherpa no está del todo conectado
   (falta la tool X). Conectalo antes de continuar." Ver `reference/mcp-connection.md`.

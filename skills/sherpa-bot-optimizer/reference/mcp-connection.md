@@ -15,7 +15,8 @@ get_chatwoot_conversation_messages, get_chatwoot_broker_conversations,
 get_bot_conversations, get_contact_conversation,
 get_conversation_transcript, get_bot_transcripts, get_bot_flows,
 create_flow_draft, update_flow_subflow, update_flow_questions,
-update_flow_copies, preview_flow_draft, publish_flow_draft
+update_flow_copies, preview_flow_draft, publish_flow_draft,
+get_voice_tone, update_voice_tone
 ```
 > Las `get_chatwoot_*` son las de lectura por defecto (cubren TODOS los bots). Las de Andes
 > (`get_bot_conversations`, etc.) solo cubren bots con Andes activo. Si faltan las `get_chatwoot_*`,
