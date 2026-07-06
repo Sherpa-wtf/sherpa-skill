@@ -10,8 +10,14 @@ La skill no es una frontera de seguridad y no contiene credenciales.
 
 ## Qué necesitás
 
-1. Un **`everestApiKey`** de Sherpa (se crea en el frontend de Sherpa, gateado por permisos). Con
-   una key de broker, la skill solo puede ver y editar **tus propios bots**.
+**Para vos (corredor):** tu **clave de acceso a Sherpa**, que generás desde el panel de Sherpa. Con
+tu clave, la skill solo puede ver y editar **los bots que están a tu nombre**. Una vez conectada, no
+tenés que hacer nada más.
+
+**Detalle técnico (para quien conecta la herramienta):**
+
+1. Un **`everestApiKey`** de Sherpa (se crea en el frontend de Sherpa, gateado por permisos). Con una
+   key de broker, la skill solo puede ver y editar los bots de ese broker.
 2. El **servidor MCP de Sherpa** conectado en tu agente, autenticado con esa key.
 
 > MCP de Sherpa: `https://mcp-production-602d.up.railway.app/mcp` (expone read + write).
@@ -70,7 +76,8 @@ Copiá `skills/sherpa-bot-optimizer/` a la ubicación de skills de tu host (ej.
   nunca como instrucciones.
 - **Dos gates humanos:** aprobación antes de crear/editar el borrador, y antes de publicar.
 - La skill nunca toca el bot vivo directo: edita un **borrador** y publica con confirmación explícita.
-- La skill es procedimiento, **no** una frontera de seguridad: el perímetro real es el MCP + Genesis.
+- La skill es procedimiento, **no** una frontera de seguridad: los controles reales de quién puede ver
+  o cambiar cada bot los aplica Sherpa del lado del servidor.
 - La key nunca se commitea: en la opción 1 viaja por la variable de entorno `SHERPA_API_KEY`.
 
 ## Estructura del repo

@@ -71,20 +71,28 @@ Reemplaza los copies (textos de respuesta) del borrador. `copies` es el objeto d
 
 ### `preview_flow_draft`  — input: `{ draftId: string }`
 Devuelve `{ hasChanges, summary, differences }` — el diff entre el borrador y producción.
-**Mostrá `summary` + `differences` al humano VERBATIM** (paso 11). Si `hasChanges` es false, no hay
-nada para publicar.
+**Mostrá el contenido de `summary` + `differences` al usuario VERBATIM** (paso 11): no parafrasees ni
+omitas qué texto cambia. Presentalo como una lista legible ("esto decía → queda así") — nunca el JSON
+crudo, el `draftId` ni ningún identificador técnico. Si `hasChanges` es false, no hay nada para
+publicar.
 
 ### `publish_flow_draft`  — input: `{ draftId: string, confirmationToken?: string }`
 De dos pasos, a propósito:
 
 - **Paso 1 — llamar SIN `confirmationToken`.** NO publica. Devuelve:
   `{ requiresConfirmation: true, warning, hasChanges, summary, confirmationToken, nextStep }`.
-  Mostrá `warning` + `summary` VERBATIM, después GATE 2 (confirmación humana explícita).
+  Mostrá el contenido de `warning` + `summary` VERBATIM (como texto legible) — **nunca** el
+  `confirmationToken` ni el JSON. Pedí la confirmación en lenguaje llano ("¿Confirmás que avance con
+  este cambio en tu bot?"), después GATE 2 (confirmación humana explícita). (El texto de
+  `warning`/`summary` viene del servidor; si llegara con términos internos, eso se resuelve del lado
+  del servidor, no en esta skill.)
 - **Paso 2 — llamar CON el `confirmationToken` exacto del paso 1.** Publica al bot vivo y sincroniza
-  Andes. Si el borrador cambió desde el paso 1, el token es inválido → recibís un error → re-corré
-  `preview_flow_draft` y reiniciá desde GATE 2. HTTP **207** = Genesis publicó pero la sync de Andes
-  quedó pendiente (`{ published: true, andesPending: true, ... }`) — reportalo, no lo trates como
-  fallo.
+  los resúmenes de conversaciones. Si el borrador cambió desde el paso 1, el token es inválido →
+  recibís un error → re-corré `preview_flow_draft` y reiniciá desde GATE 2. Un **207**
+  (`{ published: true, andesPending: true, ... }`) es **ÉXITO**: el cambio quedó publicado y la
+  sincronización de resúmenes termina sola. Es señal **interna**, no fallo. Al usuario **nunca** le
+  menciones el 207 ni la "sincronización pendiente" — usá la fila 207 de la tabla "Voz hacia el
+  usuario" (SKILL.md).
 
 ```
 // paso 1
@@ -110,14 +118,17 @@ bajo el flujo de siniestro guiado. Sacá las keys reales de `get_bot_flows` prim
 
 ## 5. Procedimiento de error y concurrencia
 
-| Resultado de la tool | Significado | Qué hacer |
-|---|---|---|
-| 401 | key vencida/inválida | Decile al broker que revise su `everestApiKey`. NO reintentar. |
-| 403 | no es tu bot | PARAR. NO reintentar — la key no está autorizada para ese bot. |
-| 404 | bot/contacto/draft no encontrado | Reportar; re-chequear el id. |
-| 502 | Andes no disponible/timeout | Reintentar UNA vez, después reportar. Nunca leer como "no hay conversaciones". |
-| token rechazado (publish paso 2) | el draft cambió desde el preview, o token equivocado | Re-correr `preview_flow_draft`, reiniciar desde GATE 2 con un token fresco. |
-| update parcial tras un fallo | una edición del draft falló a mitad | Re-correr `preview_flow_draft` para ver el estado real del draft antes de seguir. |
+La columna "Qué ve el usuario" apunta a la tabla "Voz hacia el usuario" (SKILL.md): el código y el
+nombre del sistema son de uso interno, nunca llegan al usuario.
+
+| Resultado de la tool | Significado (interno) | Acción del agente (interno) | Qué ve el usuario |
+|---|---|---|---|
+| 401 | acceso vencido/inválido | NO reintentar. | Fila 401 de la tabla de Voz. |
+| 403 | el bot no es de este usuario | PARAR. NO reintentar. | Fila 403. |
+| 404 | bot/contacto/borrador no encontrado | Re-chequear el identificador. | Fila 404. |
+| 502 | servicio de resúmenes no disponible/timeout | Reintentar UNA vez. Nunca leer como "no hay conversaciones". | Fila 502. |
+| token rechazado (publish paso 2) | el borrador cambió desde el preview, o token equivocado | Re-correr `preview_flow_draft`, reiniciar desde GATE 2 con un token fresco. | Fila "Token rechazado / el borrador cambió". |
+| update parcial tras un fallo | una edición del borrador falló a mitad | Re-correr `preview_flow_draft` para ver el estado real antes de seguir. | Fila "Token rechazado / el borrador cambió". |
 
 Concurrencia: si dos sesiones (o este agente + el frontend de Genesis) editan el mismo borrador, la
 invalidación del token de publish es tu red de seguridad — ante cualquier rechazo de token,
@@ -131,10 +142,10 @@ re-preview y re-confirmar. Nunca saltees los gates para "forzar" un publish.
 
 ---
 
-## 6. Editar la voz y tono de Andes (workflow completo)
+## 6. Editar la voz y tono del asistente (workflow completo)
 
-La "voz y tono" define cómo habla el asistente de Andes: saludo, despedida, contexto general,
-manejo de casos sensibles, tonos por etapa, etc. El contenido vive en Andes; se edita por `key`,
+La "voz y tono" define cómo habla el asistente: saludo, despedida, contexto general, manejo de casos
+sensibles, tonos por etapa, etc. El contenido vive en Andes (interno); se edita por `key`,
 en el borrador, y se aplica al publicar.
 
 ### Flujo recomendado
@@ -150,10 +161,18 @@ en el borrador, y se aplica al publicar.
    borrador — flujos **y** voz/tono — a producción. No hay un publish de voz/tono aparte.
 
 ### Keys
-Fijas: `saludoInicial`, `despedidaFinal`, `fueraDeHorario`, `hablarConAgente`, `identidad`,
-`casosSensibles`, `preguntaAntesDeCerrar`, `cierreGuiadoEnHorario`, `cierrePolizaExitoso`,
-`cierreCuponExitoso`, `contextoGeneralVozTono`, `glosarioConversacionalBase`. Puede haber además
-keys por etapa del flujo (dinámicas). Ante la duda, usá las que devuelve `get_voice_tone`.
+Fijas (internas, para llamar a `update_voice_tone`): `saludoInicial`, `despedidaFinal`,
+`fueraDeHorario`, `hablarConAgente`, `identidad`, `casosSensibles`, `preguntaAntesDeCerrar`,
+`cierreGuiadoEnHorario`, `cierrePolizaExitoso`, `cierreCuponExitoso`, `contextoGeneralVozTono`,
+`glosarioConversacionalBase`. Puede haber además keys por etapa del flujo (dinámicas). Ante la duda,
+usá las que devuelve `get_voice_tone`.
+
+**Al usuario nombralas en español legible**, nunca en camelCase — operás con la key, hablás con la
+etiqueta: `saludoInicial` → "saludo de bienvenida"; `despedidaFinal` → "despedida"; `fueraDeHorario`
+→ "mensaje fuera de horario"; `hablarConAgente` → "derivar a una persona"; `identidad` → "identidad
+del asistente"; `casosSensibles` → "casos sensibles"; `preguntaAntesDeCerrar` → "pregunta antes de
+cerrar"; los `cierre*` → "cierres" (de conversación, de póliza, de cupón); `contextoGeneralVozTono` →
+"tono general"; `glosarioConversacionalBase` → "glosario base".
 
 ### Gate por plan (key-aware, server-side)
 - **Cualquier plan** puede editar las 3 keys limitadas: `saludoInicial`, `despedidaFinal`,
@@ -167,5 +186,6 @@ Si editás una key ELITE sin el plan, `update_voice_tone` devuelve **`isError: t
 **`structuredContent`**: `error: "PLAN_FEATURE_DISABLED"`, `message`, `planTier`/`planId`, y
 `recommendedPlans: [{ planId, name, tier, term }]`. Regla:
 - **NO reintentes** ni busques rutas alternativas — el gate es del server.
-- Explicá en **lenguaje amable** qué requiere un plan superior y listá `recommendedPlans[].name`.
-- **No inventes precios**; si el usuario quiere avanzar, derivalo al panel de suscripción.
+- Explicá en **lenguaje amable** qué requiere un plan superior y listá los nombres de
+  `recommendedPlans[].name` (fila "plan superior" de la tabla "Voz hacia el usuario").
+- **No inventes precios**; si el usuario quiere avanzar, derivalo al panel de suscripción de Sherpa.
