@@ -16,7 +16,9 @@ Hay dos fuentes de conversaciones:
 **Regla:** si vas a mirar UN bot, empezá con Chatwoot (`get_chatwoot_bot_conversations`) — nunca te
 deja en 0 falso. Usá los resúmenes de Andes solo como atajo cuando ya sabés que el bot tiene Andes.
 **Si una tool de Andes (`get_bot_conversations`/`get_bot_transcripts`) devuelve 0 / total:0, NO concluyas
-"no hay conversaciones": ese bot no tiene Andes → releé con `get_chatwoot_bot_conversations`.**
+"no hay conversaciones": ese bot no tiene los resúmenes pre-computados activos → releé con
+`get_chatwoot_bot_conversations`.** Este fallback es **silencioso**: al usuario nunca le digas "ese bot
+no tiene Andes" ni menciones qué fuente interna usaste — para él son simplemente "tus conversaciones".
 
 ## Regla de costo
 
@@ -55,6 +57,11 @@ concreta:
 
 Presentá esto como una lista numerada en el paso 6. Después GATE 1: pedile al humano que apruebe el
 set exacto antes de crear o editar cualquier borrador. No metas cambios que el humano no aprobó.
+
+Al presentárselo al usuario, hablá en lenguaje de negocio, no técnico: "la palabra clave del menú"
+en vez de `menuKeyword`, "el texto de respuesta" en vez de `copy`, "una rama del menú" en vez de
+`subflujo`. El usuario aprueba el **qué** y el **porqué** del cambio, no la mecánica interna
+(`flowPath`, `flowKey`, nombres de tools).
 
 ## Mantené chico el presupuesto de lectura profunda
 

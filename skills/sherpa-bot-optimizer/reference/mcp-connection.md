@@ -22,8 +22,9 @@ get_voice_tone, update_voice_tone
 > (`get_bot_conversations`, etc.) solo cubren bots con Andes activo. Si faltan las `get_chatwoot_*`,
 > el MCP está desactualizado.
 
-Si falta alguna tool requerida, **PARAR** y avisarle al usuario que el servidor MCP no está del todo
-conectado.
+Si falta alguna tool requerida, **PARAR**. Al usuario NO le hables de "MCP", "servidor" ni "tools":
+usá la fila "Conexión con Sherpa incompleta" de la tabla "Voz hacia el usuario" (SKILL.md) — "Tu
+conexión con Sherpa todavía no está lista del todo… escribí a soporte de Sherpa para que la revisen".
 
 ## Identidad y alcance
 
