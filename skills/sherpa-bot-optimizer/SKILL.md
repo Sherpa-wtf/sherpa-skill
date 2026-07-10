@@ -98,11 +98,15 @@ humana son obligatorios: uno **antes de crear/editar un borrador**, otro **antes
  2. list_bots                       → elegir el bot; si es ambiguo, PREGUNTAR al humano cuál
  3. elegir un rango de fechas       → si no lo dieron, PREGUNTAR (ej. "últimos 7 días")
  4. get_chatwoot_bot_conversations  → LISTAR las conversaciones del bot (Chatwoot). Cubre TODOS los
-                                     bots, incluidos los que NO tienen Andes. Paginá con `page`.
-                                     (Alternativa más barata SOLO si el bot tiene Andes activo:
-                                      get_bot_conversations(summary) = resúmenes pre-computados. Pero si
-                                      da total:0 / 0 sesiones, el bot NO tiene Andes → usá el de Chatwoot.
-                                      NO concluyas "no hay conversaciones" desde las tools de Andes.)
+                                     bots, incluidos los que NO tienen Andes. Para el rango del paso 3
+                                     pasá `from`/`to` (ISO): el server filtra por fecha y no pagina
+                                     histórico ilimitado (mirá `truncated` en la respuesta). Sin rango,
+                                     paginá con `page`.
+                                     (Alternativa si el bot tiene Andes: get_bot_conversations(summary,
+                                      con from/to) = resúmenes pre-computados, más barato. OJO: un total:0
+                                      puede ser un período legítimamente vacío, NO "el bot no tiene Andes":
+                                      no concluyas "no hay conversaciones" ni caigas al histórico completo →
+                                      re-leé Chatwoot con el MISMO from/to. Ver analysis-playbook.md.)
  5. get_chatwoot_conversation_messages → mensajes crudos (texto) de una conversación puntual, por su
                                      conversationId (del paso 4). Traé SOLO las que necesitás leer a fondo.
  6. producir RECOMENDACIONES        → solo texto. Sin tools de escritura todavía. Listá los cambios

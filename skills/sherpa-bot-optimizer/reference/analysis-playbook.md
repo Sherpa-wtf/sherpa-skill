@@ -6,19 +6,27 @@ que el humano aprueba en GATE 1 (ver SKILL.md).
 
 ## Qué tool usar para leer (IMPORTANTE)
 
-Hay dos fuentes de conversaciones:
-- **Chatwoot (por defecto): `get_chatwoot_bot_conversations({ botId, page })`** lista las conversaciones
-  de CUALQUIER bot — incluidos los que no tienen Andes activo. Para el hilo crudo de una conversación:
+Hay dos fuentes de conversaciones, y **ambas aceptan rango de fechas**:
+- **Chatwoot (por defecto): `get_chatwoot_bot_conversations({ botId, from?, to?, page? })`** lista las
+  conversaciones de CUALQUIER bot — incluidos los que no tienen Andes activo. Con `from`/`to` (ISO) el
+  server filtra por fecha y no pagina histórico ilimitado (la respuesta trae `range` y `truncated`); sin
+  fechas, paginás con `page`. Para el hilo crudo de una conversación:
   `get_chatwoot_conversation_messages({ botId, conversationId, before? })`.
 - **Andes (resúmenes): `get_bot_conversations({ botId, from, to })`** devuelve resúmenes pre-computados,
   más baratos, PERO solo para bots con `features.andes` activo.
 
-**Regla:** si vas a mirar UN bot, empezá con Chatwoot (`get_chatwoot_bot_conversations`) — nunca te
-deja en 0 falso. Usá los resúmenes de Andes solo como atajo cuando ya sabés que el bot tiene Andes.
-**Si una tool de Andes (`get_bot_conversations`/`get_bot_transcripts`) devuelve 0 / total:0, NO concluyas
-"no hay conversaciones": ese bot no tiene los resúmenes pre-computados activos → releé con
-`get_chatwoot_bot_conversations`.** Este fallback es **silencioso**: al usuario nunca le digas "ese bot
-no tiene Andes" ni menciones qué fuente interna usaste — para él son simplemente "tus conversaciones".
+**Regla (respetá SIEMPRE el rango del paso 3):** si vas a mirar UN bot, empezá con Chatwoot
+(`get_chatwoot_bot_conversations`) pasándole el `from`/`to` de la revisión — nunca te deja en 0 falso y
+queda acotado a la ventana pedida. Usá los resúmenes de Andes como atajo cuando el bot tiene Andes,
+también con `from`/`to`.
+
+**Cuidado con el fallback (no lo confundas con "sin datos"):** si una tool de Andes
+(`get_bot_conversations`/`get_bot_transcripts`) devuelve 0 / total:0 para un rango, eso puede ser un
+**período legítimamente vacío**, NO necesariamente "el bot no tiene Andes". NO concluyas "no hay
+conversaciones" ni caigas al histórico completo de Chatwoot: **re-leé Chatwoot con el MISMO `from`/`to`**.
+Si en esa ventana también viene vacío, reportá honestamente que no hubo conversaciones en ese período.
+Este fallback es **silencioso** hacia el usuario: nunca le digas "ese bot no tiene Andes" ni menciones
+qué fuente interna usaste — para él son simplemente "tus conversaciones".
 
 ## Regla de costo
 
