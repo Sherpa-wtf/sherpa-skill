@@ -20,7 +20,7 @@ tenés que hacer nada más.
    key de broker, la skill solo puede ver y editar los bots de ese broker.
 2. El **servidor MCP de Sherpa** conectado en tu agente, autenticado con esa key.
 
-> MCP de Sherpa: `https://mcp-production-602d.up.railway.app/mcp` (expone read + write).
+> MCP de Sherpa: `https://mcp.sherpa.wtf/mcp` (expone read + write).
 
 ## Instalación
 
