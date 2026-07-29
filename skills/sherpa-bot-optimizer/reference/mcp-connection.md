@@ -14,6 +14,7 @@ get_chatwoot_bot_conversations, get_chatwoot_contact_conversations,
 get_chatwoot_conversation_messages, get_chatwoot_broker_conversations,
 get_bot_conversations, get_contact_conversation,
 get_conversation_transcript, get_bot_transcripts, get_bot_flows,
+get_bot_documentation_metrics, get_bot_resolution_rate, get_bot_mass_sends,
 create_flow_draft, update_flow_subflow, update_flow_questions,
 update_flow_copies, preview_flow_draft, publish_flow_draft,
 get_voice_tone, update_voice_tone
@@ -21,6 +22,10 @@ get_voice_tone, update_voice_tone
 > Las `get_chatwoot_*` son las de lectura por defecto (cubren TODOS los bots). Las de Andes
 > (`get_bot_conversations`, etc.) solo cubren bots con Andes activo. Si faltan las `get_chatwoot_*`,
 > el MCP está desactualizado.
+>
+> Las tres tools de métricas (`get_bot_documentation_metrics`, `get_bot_resolution_rate`,
+> `get_bot_mass_sends`) habilitan el Modo B (reportar números). Si faltan, el resto de la skill
+> funciona igual: seguí con el Modo A y no le prometas números al usuario.
 
 Si falta alguna tool requerida, **PARAR**. Al usuario NO le hables de "MCP", "servidor" ni "tools":
 usá la fila "Conexión con Sherpa incompleta" de la tabla "Voz hacia el usuario" (SKILL.md) — "Tu

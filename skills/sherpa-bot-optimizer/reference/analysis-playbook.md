@@ -28,6 +28,19 @@ Si en esa ventana también viene vacío, reportá honestamente que no hubo conve
 Este fallback es **silencioso** hacia el usuario: nunca le digas "ese bot no tiene Andes" ni menciones
 qué fuente interna usaste — para él son simplemente "tus conversaciones".
 
+## Empezá por los números para saber dónde mirar
+
+Antes de leer conversaciones, `get_bot_resolution_rate({ botId, from, to })` te dice **en qué flujo
+se pierde la gente**: su campo `porFlujo` viene ordenado de peor a mejor tasa. Leer las
+conversaciones del peor flujo cuesta una fracción de leer las de toda la semana, y la recomendación
+sale mejor fundada porque atás el patrón cualitativo a un número. Si la consulta es de
+documentación, `get_bot_documentation_metrics` marca lo mismo para pólizas y cupones.
+
+Los números son para **orientarte a vos**, no para volcárselos al usuario en esta etapa. Antes de
+citar cualquiera de ellos, leé `metrics-reporting.md`: hay tres formas fáciles de leerlos mal (0%
+que en realidad es "sin datos", tasas calculadas sobre poquísimos casos, y contadores de campañas
+que no se suman entre sí).
+
 ## Regla de costo
 
 Volcar cientos de mensajes crudos al contexto es la principal forma de que esta skill se vuelva lenta
@@ -51,6 +64,9 @@ Leé los resúmenes buscando patrones, no casos sueltos:
   orden equivocado.
 - **Sobrecarga de derivación:** muchas conversaciones escalan a un humano por algo que el flujo
   podría cubrir.
+- **Documentación que se pide y no llega:** si `get_bot_documentation_metrics` muestra pólizas o
+  cupones con muchas `noEntregadas`, leé esas conversaciones: puede ser un dato que el bot pide mal
+  (patente, DNI) o una expectativa mal seteada en el copy.
 
 ## Convertir hallazgos en recomendaciones
 
