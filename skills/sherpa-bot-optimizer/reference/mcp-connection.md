@@ -15,6 +15,7 @@ get_chatwoot_conversation_messages, get_chatwoot_broker_conversations,
 get_bot_conversations, get_contact_conversation,
 get_conversation_transcript, get_bot_transcripts, get_bot_flows,
 get_bot_documentation_metrics, get_bot_resolution_rate, get_bot_mass_sends,
+get_broker_rejections, get_rejections_by_broker,
 create_flow_draft, update_flow_subflow, update_flow_questions,
 update_flow_copies, preview_flow_draft, publish_flow_draft,
 get_voice_tone, update_voice_tone
@@ -23,9 +24,11 @@ get_voice_tone, update_voice_tone
 > (`get_bot_conversations`, etc.) solo cubren bots con Andes activo. Si faltan las `get_chatwoot_*`,
 > el MCP está desactualizado.
 >
-> Las tres tools de métricas (`get_bot_documentation_metrics`, `get_bot_resolution_rate`,
-> `get_bot_mass_sends`) habilitan el Modo B (reportar números). Si faltan, el resto de la skill
-> funciona igual: seguí con el Modo A y no le prometas números al usuario.
+> Las cinco tools de métricas (`get_bot_documentation_metrics`, `get_bot_resolution_rate`,
+> `get_bot_mass_sends`, `get_broker_rejections`, `get_rejections_by_broker`) habilitan el Modo B
+> (reportar números). Si faltan, el resto de la skill funciona igual: seguí con el Modo A y no le
+> prometas números al usuario. `get_rejections_by_broker` además es solo para god_mode: que un
+> broker común reciba un error de permisos ahí es lo esperado, no una conexión rota.
 
 Si falta alguna tool requerida, **PARAR**. Al usuario NO le hables de "MCP", "servidor" ni "tools":
 usá la fila "Conexión con Sherpa incompleta" de la tabla "Voz hacia el usuario" (SKILL.md) — "Tu

@@ -1,6 +1,6 @@
 {
   "name": "sherpa-bot-optimizer",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Analiza las conversaciones y las métricas de un bot de Sherpa y mejora sus flujos de forma segura (2 gates humanos, fail-closed) vía el MCP de Sherpa.",
   "author": {
     "name": "Sherpa",
@@ -16,6 +16,7 @@
     "chatbot",
     "whatsapp",
     "flows",
-    "metricas"
+    "metricas",
+    "rechazos"
   ]
 }
