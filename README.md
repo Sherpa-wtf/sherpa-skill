@@ -68,7 +68,7 @@ Copiá `skills/sherpa-bot-optimizer/` a la ubicación de skills de tu host (ej.
 
 - **Claude Code:**
   ```bash
-  claude mcp add --transport http sherpa https://mcp-production-602d.up.railway.app/mcp \
+  claude mcp add --transport http sherpa https://mcp.sherpa.wtf/mcp \
     --header "Authorization: Bearer <tu-everestApiKey>"
   ```
   > Si tu versión de Claude Code no manda el header (bug conocido en algunas versiones),
