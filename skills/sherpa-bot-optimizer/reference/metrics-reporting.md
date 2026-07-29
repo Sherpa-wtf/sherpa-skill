@@ -1,12 +1,14 @@
-# Métricas del bot — leer los números y contárselos al corredor
+# Métricas — leer los números y contárselos al corredor
 
-Tres tools de solo lectura que devuelven **números agregados** de un bot (no conversaciones). No
-escriben nada: se pueden usar sin gates. Sirven para dos cosas: **reportarle al usuario cómo viene
-su bot** (Modo B del workflow) y **decidir dónde mirar** antes de leer conversaciones (Modo A).
+Cinco tools de solo lectura que devuelven **números agregados** (no conversaciones). No escriben
+nada: se pueden usar sin gates. Sirven para dos cosas: **reportarle al usuario cómo viene su
+operación** (Modo B del workflow) y **decidir dónde mirar** antes de leer conversaciones (Modo A).
 
-Todas toman `botId` y un rango opcional `from`/`to` en ISO 8601.
+Tres son **por bot** (toman `botId`) y dos son **por broker** — los rechazos son de la cuenta, no
+de un bot puntual, así que no les pases un `botId`. Todas aceptan un rango opcional `from`/`to`
+en ISO 8601.
 
-## Las tres tools
+## Las cinco tools
 
 ### `get_bot_documentation_metrics({ botId, from?, to? })` — envío de documentación
 
@@ -28,6 +30,30 @@ De las conversaciones que registraron un cierre, qué porción cerró **resuelta
 - `conversacionesIniciadas` y `cobertura` — ver abajo, **es obligatorio mirarlo**.
 - `porFlujo` — el mismo cálculo por flujo, **ordenado de PEOR a mejor tasa**.
 
+### `get_broker_rejections({ brokerUserId?, from?, to? })` — rechazos cargados y notificados
+
+Rechazos de un broker (no de un bot): `cargados`, `notificados`, `sinNotificar`,
+`tasaNotificacion`, y el desglose `porAseguradora` ordenado por `sinNotificar` desc. Sin
+`brokerUserId` usa la cuenta propia; god_mode puede pasar el de otro broker.
+
+Dos definiciones que hay que respetar al contarlo:
+
+- **Cargado** = el rechazo quedó vinculado a un contacto de ese broker. Los rechazos que el
+  sistema no pudo vincular a nadie **no aparecen acá**, así que este total es menor que "todos
+  los rechazos que entraron". No lo presentes como "los rechazos que llegaron".
+- **Notificado** = ese rechazo salió en algún envío masivo, en cualquier momento. El rango
+  filtra por fecha de **carga**, no de notificación: "de los que se cargaron en julio, cuántos
+  ya se avisaron".
+
+### `get_rejections_by_broker({ from?, to?, limit? })` — ranking de brokers (solo god_mode)
+
+Compara todos los brokers, ordenado por los que más rechazos tienen **sin notificar**. Devuelve
+además `sinVincular`: los rechazos del período que no quedaron atados a ningún broker. Ese
+número es la contracara del ranking — sin él, la suma de la tabla se lee como si fuera el total
+importado, y no lo es. Si `truncated` viene `true`, hay más brokers que el límite pedido.
+
+Un broker común no puede llamarla (da error de permisos, y está bien): es una vista de Sherpa.
+
 ### `get_bot_mass_sends({ botId, from?, to?, limit? })` — envíos masivos realizados
 
 Los envíos masivos (campañas por plantilla de WhatsApp) hechos con ese bot, del más reciente al más
@@ -35,7 +61,7 @@ viejo, con `counters` de cada uno (total, enviados, entregados, leídos, fallido
 `templateName`, `status` y `sendAt`. Página acotada: default 20, máximo 50; si `truncated` viene
 `true` hubo más en el rango — acotá con `from`/`to` en vez de subir el `limit`.
 
-## Los tres errores de interpretación (no los cometas)
+## Los cuatro errores de interpretación (no los cometas)
 
 **1. `sinDatos: true` NO es cero por ciento.** Significa que en ese rango no hubo ningún evento.
 Puede ser que el bot no tenga flujos de documentación, o que simplemente no haya tenido tráfico.
@@ -49,7 +75,13 @@ resolución" ahí sería mentirle al usuario. Regla: si la cobertura es baja, de
 está calculado sobre pocos casos. Si `tasaResolucion` viene `null`, no hubo cierres: no lo traduzcas
 a 0%.
 
-**3. Los contadores de un envío masivo no se suman entre sí.** Vienen con `counterSemantics`, que
+**3. "Rechazos cargados" no es "rechazos que entraron".** Solo cuenta los que se pudieron
+vincular a un contacto del broker. Si decís "te entraron 120 rechazos" cuando en realidad
+entraron 300 y 180 no matchearon con ningún contacto, le estás dando un número falso. Decí
+"120 quedaron asociados a tus clientes" y, si tenés el `sinVincular` a mano (solo god_mode),
+nombrá el resto como lo que es: rechazos que todavía no se pudieron identificar.
+
+**4. Los contadores de un envío masivo no se suman entre sí.** Vienen con `counterSemantics`, que
 dice cómo interpretarlos (si son acumulativos o excluyentes). Leelo antes de hacer cualquier cuenta
 propia; no restes ni sumes columnas por tu cuenta. Si un envío trae `countersStale: true`, sus
 números pueden estar desactualizados: mencionalo como aproximado o no lo incluyas en el total.
@@ -79,5 +111,9 @@ Se aplican las mismas reglas de la tabla "Voz hacia el usuario" de `SKILL.md`. A
 - **Cerrá con una acción, no con la estadística.** Si un flujo tiene la peor tasa, ofrecé revisarlo:
   "¿Querés que mire las conversaciones de esa parte para ver qué está pasando?". Ahí enganchás con
   el Modo A y, si hay cambios para hacer, con GATE 1.
+- **En rechazos, la acción es el envío, no el flujo.** Si hay muchos cargados sin notificar, lo
+  que corresponde ofrecer es avisarles (una campaña), y eso se arma desde el panel de Sherpa —
+  esta skill no manda envíos masivos. Decí cuántos son y de qué compañías, y dejá la decisión
+  en el usuario.
 - **No adornes.** Si los números son malos, decilos con claridad y sin dramatizar; si no hay datos,
   decí que no hay datos. Nunca inventes una tendencia comparando períodos que no pediste.

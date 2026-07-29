@@ -8,9 +8,10 @@ Dos modos:
 
 - **Revisar y mejorar** — leer las conversaciones del bot, encontrar dónde se pierde la gente y
   proponer cambios de flujo, que se publican solo con aprobación humana explícita.
-- **Reportar números** (solo lectura, sin gates) — cómo viene el bot: pólizas y cupones pedidos vs.
-  entregados, envíos masivos realizados y cómo les fue, y qué porcentaje de las conversaciones
-  termina resuelto, con el desglose por flujo.
+- **Reportar números** (solo lectura, sin gates) — cómo viene la operación: pólizas y cupones
+  pedidos vs. entregados, envíos masivos realizados y cómo les fue, qué porcentaje de las
+  conversaciones termina resuelto (con el desglose por flujo), y cuántos rechazos hay cargados
+  vs. notificados por aseguradora.
 
 Es la capa de **procedimiento**. La capacidad real (leer conversaciones y métricas, editar flujos) la
 da el **servidor MCP de Sherpa**; la autorización multi-tenant la enforcea Sherpa del lado del
