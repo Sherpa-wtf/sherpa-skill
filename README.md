@@ -1,12 +1,20 @@
 # Sherpa Bot Optimizer (skill)
 
-Skill del estándar [Agent Skills](https://agentskills.io) para **analizar las conversaciones de un
-bot de Sherpa y mejorar sus flujos de forma segura**, en una sola conversación: analizar →
-recomendar → borrador → preview → publicar, con dos gates de aprobación humana.
+Skill del estándar [Agent Skills](https://agentskills.io) para **analizar las conversaciones y las
+métricas de un bot de Sherpa y mejorar sus flujos de forma segura**, en una sola conversación:
+analizar → recomendar → borrador → preview → publicar, con dos gates de aprobación humana.
 
-Es la capa de **procedimiento**. La capacidad real (leer conversaciones, editar flujos) la da el
-**servidor MCP de Sherpa**; la autorización multi-tenant la enforcea Sherpa del lado del servidor.
-La skill no es una frontera de seguridad y no contiene credenciales.
+Dos modos:
+
+- **Revisar y mejorar** — leer las conversaciones del bot, encontrar dónde se pierde la gente y
+  proponer cambios de flujo, que se publican solo con aprobación humana explícita.
+- **Reportar números** (solo lectura, sin gates) — cómo viene el bot: pólizas y cupones pedidos vs.
+  entregados, envíos masivos realizados y cómo les fue, y qué porcentaje de las conversaciones
+  termina resuelto, con el desglose por flujo.
+
+Es la capa de **procedimiento**. La capacidad real (leer conversaciones y métricas, editar flujos) la
+da el **servidor MCP de Sherpa**; la autorización multi-tenant la enforcea Sherpa del lado del
+servidor. La skill no es una frontera de seguridad y no contiene credenciales.
 
 ## Qué necesitás
 
@@ -90,6 +98,7 @@ Copiá `skills/sherpa-bot-optimizer/` a la ubicación de skills de tu host (ej.
 skills/sherpa-bot-optimizer/
   SKILL.md                    máquina de estados (2 gates, fail-closed) + reglas de seguridad
   reference/analysis-playbook.md
+  reference/metrics-reporting.md
   reference/flow-editing.md
   reference/mcp-connection.md
 README.md
