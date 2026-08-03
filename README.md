@@ -1,21 +1,33 @@
 # Sherpa Bot Optimizer (skill)
 
-Skill del estándar [Agent Skills](https://agentskills.io) para **analizar las conversaciones y las
-métricas de un bot de Sherpa y mejorar sus flujos de forma segura**, en una sola conversación:
-analizar → recomendar → borrador → preview → publicar, con dos gates de aprobación humana.
+Skill del estándar [Agent Skills](https://agentskills.io) que le da a un corredor **un analista y un
+editor para su bot de Sherpa, en la misma conversación**: lee lo que realmente pasó en los chats,
+te dice cómo viene en números, y aplica las mejoras que aprobás — sin tocar el panel y sin escribir
+una línea de configuración.
 
-Dos modos:
+Todo el ciclo en un solo chat: analizar → recomendar → borrador → preview → publicar, con **dos
+gates de aprobación humana** antes de que algo llegue al bot en vivo.
 
-- **Revisar y mejorar** — leer las conversaciones del bot, encontrar dónde se pierde la gente y
-  proponer cambios de flujo, que se publican solo con aprobación humana explícita.
+Tres cosas que hace:
+
+- **Revisar y mejorar los flujos** — leer las conversaciones reales del bot, encontrar dónde se
+  pierde la gente o dónde contesta mal, y proponer cambios concretos a los pasos, las preguntas y
+  los textos. Se publican solo con aprobación humana explícita.
+- **Ajustar cómo habla el bot** — voz y tono del asistente: saludo, despedida, fuera de horario,
+  contexto general y trato en casos sensibles. Mismo camino de borrador y aprobación. (Las secciones
+  completas son del plan ELITE; saludo, despedida y fuera de horario están disponibles en cualquier
+  plan.)
 - **Reportar números** (solo lectura, sin gates) — cómo viene la operación: pólizas y cupones
   pedidos vs. entregados, envíos masivos realizados y cómo les fue, qué porcentaje de las
   conversaciones termina resuelto (con el desglose por flujo), y cuántos rechazos hay cargados
   vs. notificados por aseguradora.
 
-Es la capa de **procedimiento**. La capacidad real (leer conversaciones y métricas, editar flujos) la
-da el **servidor MCP de Sherpa**; la autorización multi-tenant la enforcea Sherpa del lado del
-servidor. La skill no es una frontera de seguridad y no contiene credenciales.
+Todo lo que la skill le escribe al usuario está en lenguaje llano: nunca códigos de error, nombres
+de sistemas internos ni jerga técnica.
+
+Es la capa de **procedimiento**. La capacidad real (leer conversaciones y métricas, editar flujos y
+voz/tono) la da el **servidor MCP de Sherpa**; la autorización multi-tenant la enforcea Sherpa del
+lado del servidor. La skill no es una frontera de seguridad y no contiene credenciales.
 
 ## Qué necesitás
 
