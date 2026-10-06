@@ -28,6 +28,12 @@ De las conversaciones que registraron un cierre, qué porción cerró **resuelta
 - `cerradasPorInactividad` — la conversación murió sin cerrarse.
 - `tasaResolucion` — `resueltas / (resueltas + cerradasPorInactividad)`, en %.
 - `conversacionesIniciadas` y `cobertura` — ver abajo, **es obligatorio mirarlo**.
+  `conversacionesIniciadas` cuenta **toda conversación con al menos un mensaje**, la haya
+  empezado el cliente, el asistente, un asesor o una plantilla (también en bots solo-CRM).
+- `cerradasPorAsesor` — conversaciones que resolvió un asesor desde el CRM. **No es una
+  resolución del asistente**: no entra en `tasaResolucion` ni en `porFlujo`.
+- `cierresTotales` y `coberturaTotal` — lo mismo que `cierresRegistrados` y `cobertura`, pero
+  sumando los cierres del asesor: qué porción de todas las conversaciones terminó cerrada.
 - `porFlujo` — el mismo cálculo por flujo, **ordenado de PEOR a mejor tasa**.
 
 ### `get_broker_rejections({ brokerUserId?, from?, to? })` — rechazos cargados y notificados
@@ -74,6 +80,11 @@ registrados, ambos resueltos, muestra `tasaResolucion: 100` con `cobertura: 0.5`
 resolución" ahí sería mentirle al usuario. Regla: si la cobertura es baja, decí el número **y** que
 está calculado sobre pocos casos. Si `tasaResolucion` viene `null`, no hubo cierres: no lo traduzcas
 a 0%.
+
+Ojo con los bots de envíos masivos y los solo-CRM: como `conversacionesIniciadas` cuenta toda
+conversación con un mensaje (también una plantilla sin respuesta), su `cobertura` es baja por
+construcción. Ahí no es que el asistente funcione mal: muchas conversaciones las atiende o las
+cierra un asesor. Mirá `cerradasPorAsesor` y `coberturaTotal` antes de sacar conclusiones.
 
 **3. "Rechazos cargados" no es "rechazos que entraron".** Solo cuenta los que se pudieron
 vincular a un contacto del broker. Si decís "te entraron 120 rechazos" cuando en realidad
