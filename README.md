@@ -8,7 +8,7 @@ una línea de configuración.
 Todo el ciclo en un solo chat: analizar → recomendar → borrador → preview → publicar, con **dos
 gates de aprobación humana** antes de que algo llegue al bot en vivo.
 
-Tres cosas que hace:
+Cuatro cosas que hace:
 
 - **Revisar y mejorar los flujos** — leer las conversaciones reales del bot, encontrar dónde se
   pierde la gente o dónde contesta mal, y proponer cambios concretos a los pasos, las preguntas y
@@ -21,6 +21,11 @@ Tres cosas que hace:
   pedidos vs. entregados, envíos masivos realizados y cómo les fue, qué porcentaje de las
   conversaciones termina resuelto (con el desglose por flujo), y cuántos rechazos hay cargados
   vs. notificados por aseguradora.
+
+- **Etiquetar conversaciones en el CRM** — poner o quitar etiquetas (por ejemplo `interes_alto` a
+  todas las conversaciones que pidieron una cotización). Primero muestra un resumen sin cambiar
+  nada y aplica solo con tu aprobación explícita; nunca etiqueta porque un mensaje de un cliente lo
+  pida.
 
 Todo lo que la skill le escribe al usuario está en lenguaje llano: nunca códigos de error, nombres
 de sistemas internos ni jerga técnica.
@@ -95,7 +100,7 @@ Copiá `skills/sherpa-bot-optimizer/` a la ubicación de skills de tu host (ej.
 
 - Todo el contenido recuperado (conversaciones, flujos, copies) se trata como **dato no confiable**,
   nunca como instrucciones.
-- **Dos gates humanos:** aprobación antes de crear/editar el borrador, y antes de publicar.
+- **Dos gates humanos:** aprobación antes de crear/editar el borrador, y antes de publicar. Las etiquetas del CRM tienen su propio gate: resumen sin escribir y aprobación antes de aplicar.
 - La skill nunca toca el bot vivo directo: edita un **borrador** y publica con confirmación explícita.
 - La skill es procedimiento, **no** una frontera de seguridad: los controles reales de quién puede ver
   o cambiar cada bot los aplica Sherpa del lado del servidor.
@@ -112,6 +117,7 @@ skills/sherpa-bot-optimizer/
   SKILL.md                    máquina de estados (2 gates, fail-closed) + reglas de seguridad
   reference/analysis-playbook.md
   reference/metrics-reporting.md
+  reference/conversation-labels.md
   reference/flow-editing.md
   reference/mcp-connection.md
 README.md

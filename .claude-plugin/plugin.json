@@ -1,7 +1,7 @@
 {
   "name": "sherpa-bot-optimizer",
-  "version": "0.7.2",
-  "description": "Analiza las conversaciones y las métricas de un bot de Sherpa y mejora sus flujos y su voz y tono de forma segura (2 gates humanos, fail-closed) vía el MCP de Sherpa.",
+  "version": "0.8.0",
+  "description": "Analiza las conversaciones y las métricas de un bot de Sherpa y mejora sus flujos y su voz y tono, y etiqueta conversaciones del CRM, de forma segura (gates humanos, fail-closed) vía el MCP de Sherpa.",
   "author": {
     "name": "Sherpa",
     "email": "dev@sherpa.wtf"
@@ -19,6 +19,7 @@
     "voz-y-tono",
     "metricas",
     "rechazos",
+    "etiquetas",
     "seguros"
   ]
 }
