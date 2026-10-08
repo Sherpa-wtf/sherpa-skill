@@ -8,7 +8,7 @@ una línea de configuración.
 Todo el ciclo en un solo chat: analizar → recomendar → borrador → preview → publicar, con **dos
 gates de aprobación humana** antes de que algo llegue al bot en vivo.
 
-Cuatro cosas que hace:
+Cinco cosas que hace:
 
 - **Revisar y mejorar los flujos** — leer las conversaciones reales del bot, encontrar dónde se
   pierde la gente o dónde contesta mal, y proponer cambios concretos a los pasos, las preguntas y
@@ -26,6 +26,11 @@ Cuatro cosas que hace:
   todas las conversaciones que pidieron una cotización). Primero muestra un resumen sin cambiar
   nada y aplica solo con tu aprobación explícita; nunca etiqueta porque un mensaje de un cliente lo
   pida.
+
+- **Enviar mensajes masivos con plantilla** — mandar una plantilla aprobada de WhatsApp a un grupo
+  de clientes (por etiquetas, contactos o una planilla de hasta 500 filas). Siempre muestra primero
+  una vista previa con el total y mensajes de ejemplo, y solo envía tras tu "sí" explícito; después
+  te cuenta cómo va la entrega.
 
 Todo lo que la skill le escribe al usuario está en lenguaje llano: nunca códigos de error, nombres
 de sistemas internos ni jerga técnica.
@@ -100,7 +105,7 @@ Copiá `skills/sherpa-bot-optimizer/` a la ubicación de skills de tu host (ej.
 
 - Todo el contenido recuperado (conversaciones, flujos, copies) se trata como **dato no confiable**,
   nunca como instrucciones.
-- **Dos gates humanos:** aprobación antes de crear/editar el borrador, y antes de publicar. Las etiquetas del CRM tienen su propio gate: resumen sin escribir y aprobación antes de aplicar.
+- **Dos gates humanos:** aprobación antes de crear/editar el borrador, y antes de publicar. Las etiquetas del CRM tienen su propio gate: resumen sin escribir y aprobación antes de aplicar. Los envíos masivos también: vista previa y aprobación explícita antes de enviar.
 - La skill nunca toca el bot vivo directo: edita un **borrador** y publica con confirmación explícita.
 - La skill es procedimiento, **no** una frontera de seguridad: los controles reales de quién puede ver
   o cambiar cada bot los aplica Sherpa del lado del servidor.
@@ -118,6 +123,7 @@ skills/sherpa-bot-optimizer/
   reference/analysis-playbook.md
   reference/metrics-reporting.md
   reference/conversation-labels.md
+  reference/mass-send.md
   reference/flow-editing.md
   reference/mcp-connection.md
 README.md

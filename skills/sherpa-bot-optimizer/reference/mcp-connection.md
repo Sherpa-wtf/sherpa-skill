@@ -20,7 +20,9 @@ create_flow_draft, update_flow_subflow, update_flow_questions,
 update_flow_copies, preview_flow_draft, publish_flow_draft,
 get_voice_tone, update_voice_tone,
 list_crm_labels, create_crm_label,
-add_conversation_labels, remove_conversation_labels
+add_conversation_labels, remove_conversation_labels,
+list_meta_templates, get_mass_send_status,
+build_audience, prepare_mass_send, confirm_mass_send
 ```
 > Las `get_chatwoot_*` son las de lectura por defecto (cubren TODOS los bots). Las de Andes
 > (`get_bot_conversations`, etc.) solo cubren bots con Andes activo. Si faltan las `get_chatwoot_*`,
@@ -31,6 +33,11 @@ add_conversation_labels, remove_conversation_labels
 > ocultar las tres que escriben (`MCP_LABEL_WRITE=false`): si faltan, el etiquetado no está
 > habilitado; seguí con el resto de la skill y no simules el cambio. Ver
 > `reference/conversation-labels.md`.
+>
+> Las cinco tools de envío masivo (`list_meta_templates`, `get_mass_send_status`, `build_audience`,
+> `prepare_mass_send`, `confirm_mass_send`) habilitan el Modo D. El servidor puede ocultar las tres
+> que escriben (`MCP_MASS_SEND_WRITE=false`): si faltan, el envío masivo no está habilitado; seguí
+> con el resto de la skill y no simules el envío. Ver `reference/mass-send.md`.
 >
 > Las cinco tools de métricas (`get_bot_documentation_metrics`, `get_bot_resolution_rate`,
 > `get_bot_mass_sends`, `get_broker_rejections`, `get_rejections_by_broker`) habilitan el Modo B
