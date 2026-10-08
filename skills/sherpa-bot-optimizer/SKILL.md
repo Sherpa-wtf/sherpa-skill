@@ -56,6 +56,8 @@ o escribir a soporte de Sherpa); (4) sin culpar al usuario ni alarmarlo.
 | Envío masivo: plantilla de tipo MARKETING → avisar el costo antes de preparar | "Esta plantilla es de tipo promocional: WhatsApp cobra por cada mensaje que se entrega." |
 | Envío masivo: la confirmación venció o fue rechazada → volver a preparar | "Pasó un rato desde la vista previa (o algo cambió), así que por seguridad te la muestro de nuevo antes de enviar." |
 | Envío masivo: entrega `uncertain` → no afirmar ni reenviar | "De esos [N] mensajes WhatsApp no confirmó si salieron. No los reenvío para no duplicarlos; más tarde vuelvo a revisar." |
+| Envío masivo: `MASS_SEND_SENDER_NOT_OWNED` (modo soporte, el bot es de otra cuenta) → no reintentar, no armar nada | "Desde acá solo puedo mandar envíos masivos con los bots de tu propia cuenta. Para enviar con el bot de un broker, usá el acceso del propio broker o el panel de Sherpa." |
+| Envío masivo: error genérico del remitente (`AUDIENCE_DRAFT_INVALID_REQUEST` / `AUDIENCE_DRAFT_SOURCE_FAILED`) → no reintentar a ciegas | "No pude usar este bot para el envío. Puede ser que no esté conectado por la API oficial de WhatsApp, que no pertenezca a esta cuenta o que la cuenta todavía no tenga el CRM vinculado. Revisá la conexión en el panel de Sherpa o escribí a soporte de Sherpa y lo vemos." |
 | Rechazos: `cargados` NO es "los que entraron" (solo los vinculados a un cliente suyo) | "Tenés [N] rechazos asociados a tus clientes, y a [M] ya se les avisó. Puede haber otros que todavía no se pudieron identificar con ningún cliente tuyo." |
 
 Esta tabla es la fuente única: cuando un paso del workflow o de las referencias diga "avisá al
