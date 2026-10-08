@@ -1,12 +1,12 @@
 {
   "name": "sherpa-wtf",
-  "description": "Skills de Sherpa para operar tus bots: analizar conversaciones, ver métricas y editar flujos y voz/tono, etiquetar conversaciones del CRM, vía el MCP de Sherpa.",
+  "description": "Skills de Sherpa para operar tus bots: analizar conversaciones, ver métricas y editar flujos y voz/tono, etiquetar conversaciones del CRM y enviar mensajes masivos con plantilla, vía el MCP de Sherpa.",
   "owner": { "name": "Sherpa", "email": "dev@sherpa.wtf" },
   "plugins": [
     {
       "name": "sherpa-bot-optimizer",
       "source": "./",
-      "description": "Skill + MCP de Sherpa: revisa las conversaciones y los números de un bot, y mejora sus flujos y su voz y tono, y etiqueta conversaciones del CRM, con gates de aprobación humana."
+      "description": "Skill + MCP de Sherpa: revisa las conversaciones y los números de un bot, y mejora sus flujos y su voz y tono, etiqueta conversaciones del CRM y manda envíos masivos con plantilla, con gates de aprobación humana."
     }
   ]
 }
