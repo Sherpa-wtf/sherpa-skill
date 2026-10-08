@@ -17,6 +17,16 @@ bots conectados por la API oficial de WhatsApp (Meta). Si el bot no lo es, el se
 error: no lo reintentes y usá la fila "Envío masivo: el bot no es de la API oficial" de la tabla de
 Voz. Un mensaje a una sola persona no es un envío masivo.
 
+**Errores del remitente (al armar la audiencia o preparar el envío):**
+- `MASS_SEND_SENDER_NOT_OWNED` (modo soporte): el bot no es de tu cuenta propia, y desde el modo
+  soporte solo se envía con bots propios. No reintentes ni armes nada: usá la fila "Envío masivo:
+  `MASS_SEND_SENDER_NOT_OWNED`" de la tabla de Voz (para un broker: su propio acceso o el panel).
+- Error con código `AUDIENCE_DRAFT_INVALID_REQUEST` (422) o `AUDIENCE_DRAFT_SOURCE_FAILED` (424), que
+  el servidor acompaña con las causas posibles: el bot no está conectado por la API oficial de
+  WhatsApp, no pertenece a la cuenta en uso, o la cuenta no tiene CRM vinculado. No reintentes a
+  ciegas: usá la fila "Envío masivo: error genérico del remitente" de la tabla de Voz y no le
+  adivines la causa al usuario.
+
 ## Tools
 
 | Tool | Qué hace | Escribe |
