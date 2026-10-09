@@ -122,8 +122,10 @@ Lenguaje llano, sin ids, tokens ni nombres de tools (ver tabla "Voz hacia el usu
 Cerrá siempre con el próximo paso concreto cuando haya algo pendiente (reintentar las que fallaron,
 revisar otra lista). Sin culpar al usuario ni alarmarlo.
 
-## Fuera de alcance
+## Notas IA de los contactos
 
-Las "notas IA" de los contactos (resúmenes o memoria que genera el asistente sobre un cliente) **no**
-forman parte de estas tools y no están disponibles desde acá. Si el usuario las pide, explicale que
-por ahora no puedo gestionarlas y ofrecé dejar una nota interna en la conversación como alternativa.
+Las "Notas IA" de un contacto (lo que el CRM muestra en ese campo y que el asistente usa como
+memoria del cliente) **no** son notas internas de conversación y se gestionan con otras tools. Ver
+`reference/contact-ai-notes.md` (Modo F). Si el usuario pide "anotar algo del cliente para que el
+asistente se acuerde", es Modo F; si pide dejar un aviso para el equipo en una conversación, es
+esta función.

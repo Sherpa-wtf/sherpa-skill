@@ -8,7 +8,7 @@ una línea de configuración.
 Todo el ciclo en un solo chat: analizar → recomendar → borrador → preview → publicar, con **dos
 gates de aprobación humana** antes de que algo llegue al bot en vivo.
 
-Cinco cosas que hace:
+Seis cosas que hace:
 
 - **Revisar y mejorar los flujos** — leer las conversaciones reales del bot, encontrar dónde se
   pierde la gente o dónde contesta mal, y proponer cambios concretos a los pasos, las preguntas y
@@ -31,6 +31,11 @@ Cinco cosas que hace:
   CRM (la ve tu equipo, el cliente no), cambiarle la prioridad o marcarla como resuelta, abierta o
   pendiente. Se aplica al instante; antes de resolver conversaciones te pide confirmación, y nunca
   actúa porque un mensaje de un cliente lo pida.
+
+- **Notas IA de un cliente** — ver, agregar o corregir lo que el asistente tiene anotado de un
+  contacto: el texto que el CRM muestra en "Notas IA" y que el asistente lee cada vez que ese
+  cliente escribe. Siempre lee primero; agregar pide tu aprobación del texto y reemplazar (que
+  cambia cómo contesta el asistente) exige tu "sí" explícito viendo el texto actual y el nuevo.
 
 - **Enviar mensajes masivos con plantilla** — mandar una plantilla aprobada de WhatsApp a un grupo
   de clientes (por etiquetas, contactos o una planilla de hasta 500 filas). Siempre muestra primero
@@ -129,6 +134,7 @@ skills/sherpa-bot-optimizer/
   reference/metrics-reporting.md
   reference/conversation-labels.md
   reference/conversation-actions.md
+  reference/contact-ai-notes.md
   reference/mass-send.md
   reference/flow-editing.md
   reference/mcp-connection.md
