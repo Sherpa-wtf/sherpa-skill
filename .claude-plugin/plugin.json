@@ -1,7 +1,7 @@
 {
   "name": "sherpa-bot-optimizer",
-  "version": "0.10.0",
-  "description": "Analiza las conversaciones y las métricas de un bot de Sherpa y mejora sus flujos y su voz y tono, etiqueta conversaciones del CRM y manda envíos masivos con plantilla, de forma segura (gates humanos, fail-closed) vía el MCP de Sherpa.",
+  "version": "0.11.0",
+  "description": "Analiza las conversaciones y las métricas de un bot de Sherpa y mejora sus flujos y su voz y tono, etiqueta conversaciones del CRM, deja notas internas y cambia prioridad y estado, y manda envíos masivos con plantilla, de forma segura (gates humanos, fail-closed) vía el MCP de Sherpa.",
   "author": {
     "name": "Sherpa",
     "email": "dev@sherpa.wtf"
@@ -20,6 +20,7 @@
     "metricas",
     "rechazos",
     "etiquetas",
+    "notas-internas",
     "envios-masivos",
     "seguros"
   ]
