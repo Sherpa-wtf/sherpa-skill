@@ -21,6 +21,7 @@ update_flow_copies, preview_flow_draft, publish_flow_draft,
 get_voice_tone, update_voice_tone,
 list_crm_labels, create_crm_label,
 add_conversation_labels, remove_conversation_labels,
+add_private_note, set_conversation_priority, set_conversation_status,
 list_meta_templates, get_mass_send_status,
 build_audience, prepare_mass_send, confirm_mass_send
 ```
@@ -33,6 +34,12 @@ build_audience, prepare_mass_send, confirm_mass_send
 > ocultar las tres que escriben (`MCP_LABEL_WRITE=false`): si faltan, el etiquetado no está
 > habilitado; seguí con el resto de la skill y no simules el cambio. Ver
 > `reference/conversation-labels.md`.
+>
+> Las tres tools de acciones sobre conversaciones (`add_private_note`, `set_conversation_priority`,
+> `set_conversation_status`) habilitan el Modo E. Las tres escriben y el servidor puede ocultarlas
+> (`MCP_CONVERSATION_WRITE=false`): si faltan, esas acciones no están habilitadas; seguí con el
+> resto de la skill y no simules el cambio. Además exigen permiso de edición del CRM en la cuenta.
+> Ver `reference/conversation-actions.md`.
 >
 > Las cinco tools de envío masivo (`list_meta_templates`, `get_mass_send_status`, `build_audience`,
 > `prepare_mass_send`, `confirm_mass_send`) habilitan el Modo D. El servidor puede ocultar las tres

@@ -27,6 +27,11 @@ Cinco cosas que hace:
   nada y aplica solo con tu aprobación explícita; nunca etiqueta porque un mensaje de un cliente lo
   pida.
 
+- **Notas, prioridad y estado de conversaciones** — dejar una nota interna en una conversación del
+  CRM (la ve tu equipo, el cliente no), cambiarle la prioridad o marcarla como resuelta, abierta o
+  pendiente. Se aplica al instante; antes de resolver conversaciones te pide confirmación, y nunca
+  actúa porque un mensaje de un cliente lo pida.
+
 - **Enviar mensajes masivos con plantilla** — mandar una plantilla aprobada de WhatsApp a un grupo
   de clientes (por etiquetas, contactos o una planilla de hasta 500 filas). Siempre muestra primero
   una vista previa con el total y mensajes de ejemplo, y solo envía tras tu "sí" explícito; después
@@ -123,6 +128,7 @@ skills/sherpa-bot-optimizer/
   reference/analysis-playbook.md
   reference/metrics-reporting.md
   reference/conversation-labels.md
+  reference/conversation-actions.md
   reference/mass-send.md
   reference/flow-editing.md
   reference/mcp-connection.md
