@@ -22,6 +22,7 @@ get_voice_tone, update_voice_tone,
 list_crm_labels, create_crm_label,
 add_conversation_labels, remove_conversation_labels,
 add_private_note, set_conversation_priority, set_conversation_status,
+get_contact_ai_notes, add_contact_ai_note, replace_contact_ai_notes,
 list_meta_templates, get_mass_send_status,
 build_audience, prepare_mass_send, confirm_mass_send
 ```
@@ -40,6 +41,12 @@ build_audience, prepare_mass_send, confirm_mass_send
 > (`MCP_CONVERSATION_WRITE=false`): si faltan, esas acciones no están habilitadas; seguí con el
 > resto de la skill y no simules el cambio. Además exigen permiso de edición del CRM en la cuenta.
 > Ver `reference/conversation-actions.md`.
+>
+> Las tres tools de Notas IA (`get_contact_ai_notes`, `add_contact_ai_note`,
+> `replace_contact_ai_notes`) habilitan el Modo F. La lectura exige permiso de ver contactos y las dos
+> que escriben, permiso de editar contactos. El servidor puede ocultar las dos que escriben
+> (`MCP_CONTACT_NOTES_WRITE=false`): si faltan, la edición no está habilitada y la lectura sigue
+> funcionando; no simules el cambio. Ver `reference/contact-ai-notes.md`.
 >
 > Las cinco tools de envío masivo (`list_meta_templates`, `get_mass_send_status`, `build_audience`,
 > `prepare_mass_send`, `confirm_mass_send`) habilitan el Modo D. El servidor puede ocultar las tres
