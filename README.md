@@ -38,10 +38,10 @@ Seis cosas que hace:
   cambia cómo contesta el asistente) exige tu "sí" explícito viendo el texto actual y el nuevo.
 
 - **Enviar mensajes masivos con plantilla** — mandar una plantilla aprobada de WhatsApp a un grupo
-  de clientes (por etiquetas, contactos o una planilla de hasta 500 filas), **en una sola llamada**:
+  de clientes (por etiquetas, contactos, audiencias guardadas o una planilla, solas o combinadas, hasta 500 destinatarios), **en una sola llamada**:
   te dice qué va a enviar y lo envía, sin pedirte reconfirmación. Si parte de la lista ya recibió esa
   misma plantilla en las últimas 72 horas, no envía y te lo cuenta; solo la manda igual si vos lo
-  decidís. Si preferís ver una vista previa antes, pedila. Después te cuenta cómo va la entrega.
+  decidís. Si preferís ver una vista previa antes, pedila. También se puede dejar programado para más tarde (y cancelar antes de que salga). Después te cuenta cómo va la entrega.
 
 Todo lo que la skill le escribe al usuario está en lenguaje llano: nunca códigos de error, nombres
 de sistemas internos ni jerga técnica.

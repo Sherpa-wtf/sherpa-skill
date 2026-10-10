@@ -23,8 +23,8 @@ list_crm_labels, create_crm_label,
 add_conversation_labels, remove_conversation_labels,
 add_private_note, set_conversation_priority, set_conversation_status,
 get_contact_ai_notes, add_contact_ai_note, replace_contact_ai_notes,
-list_meta_templates, get_mass_send_status,
-build_audience, send_mass_send, prepare_mass_send, confirm_mass_send
+list_meta_templates, get_mass_send_status, list_scheduled_mass_sends, list_audiences,
+build_audience, send_mass_send, prepare_mass_send, cancel_scheduled_mass_send
 ```
 > Las `get_chatwoot_*` son las de lectura por defecto (cubren TODOS los bots). Las de Andes
 > (`get_bot_conversations`, etc.) solo cubren bots con Andes activo. Si faltan las `get_chatwoot_*`,
@@ -48,10 +48,11 @@ build_audience, send_mass_send, prepare_mass_send, confirm_mass_send
 > (`MCP_CONTACT_NOTES_WRITE=false`): si faltan, la edición no está habilitada y la lectura sigue
 > funcionando; no simules el cambio. Ver `reference/contact-ai-notes.md`.
 >
-> Las seis tools de envío masivo (`list_meta_templates`, `get_mass_send_status`, `build_audience`,
-> `send_mass_send`, `prepare_mass_send`, `confirm_mass_send`) habilitan el Modo D. El camino por
-> defecto es `build_audience` → `send_mass_send` (una sola llamada); `prepare_mass_send` +
-> `confirm_mass_send` es la alternativa con vista previa. El servidor puede ocultar las que
+> Las ocho tools de envío masivo (`list_meta_templates`, `get_mass_send_status`,
+> `list_scheduled_mass_sends`, `list_audiences`, `build_audience`, `send_mass_send`, `prepare_mass_send`,
+> `cancel_scheduled_mass_send`) habilitan el Modo D. El único camino para enviar (y para programar,
+> con `scheduledAt`) es `build_audience` → `send_mass_send`, en una sola llamada; `prepare_mass_send`
+> es solo una vista previa opcional que no envía nada. El servidor puede ocultar las que
 > escriben (`MCP_MASS_SEND_WRITE=false`): si faltan, el envío masivo no está habilitado; seguí
 > con el resto de la skill y no simules el envío. Ver `reference/mass-send.md`.
 >
