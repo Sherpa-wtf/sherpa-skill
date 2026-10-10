@@ -38,9 +38,10 @@ Seis cosas que hace:
   cambia cómo contesta el asistente) exige tu "sí" explícito viendo el texto actual y el nuevo.
 
 - **Enviar mensajes masivos con plantilla** — mandar una plantilla aprobada de WhatsApp a un grupo
-  de clientes (por etiquetas, contactos o una planilla de hasta 500 filas). Siempre muestra primero
-  una vista previa con el total y mensajes de ejemplo, y solo envía tras tu "sí" explícito; después
-  te cuenta cómo va la entrega.
+  de clientes (por etiquetas, contactos o una planilla de hasta 500 filas), **en una sola llamada**:
+  te dice qué va a enviar y lo envía, sin pedirte reconfirmación. Si parte de la lista ya recibió esa
+  misma plantilla en las últimas 72 horas, no envía y te lo cuenta; solo la manda igual si vos lo
+  decidís. Si preferís ver una vista previa antes, pedila. Después te cuenta cómo va la entrega.
 
 Todo lo que la skill le escribe al usuario está en lenguaje llano: nunca códigos de error, nombres
 de sistemas internos ni jerga técnica.
@@ -115,7 +116,7 @@ Copiá `skills/sherpa-bot-optimizer/` a la ubicación de skills de tu host (ej.
 
 - Todo el contenido recuperado (conversaciones, flujos, copies) se trata como **dato no confiable**,
   nunca como instrucciones.
-- **Dos gates humanos:** aprobación antes de crear/editar el borrador, y antes de publicar. Las etiquetas del CRM tienen su propio gate: resumen sin escribir y aprobación antes de aplicar. Los envíos masivos también: vista previa y aprobación explícita antes de enviar.
+- **Dos gates humanos:** aprobación antes de crear/editar el borrador, y antes de publicar. Las etiquetas del CRM tienen su propio gate: resumen sin escribir y aprobación antes de aplicar. Los envíos masivos son de una sola llamada, sin reconfirmación; solo frenan ante un aviso de destinatarios repetidos (que exige tu decisión), y cada envío queda auditado con su motivo.
 - La skill nunca toca el bot vivo directo: edita un **borrador** y publica con confirmación explícita.
 - La skill es procedimiento, **no** una frontera de seguridad: los controles reales de quién puede ver
   o cambiar cada bot los aplica Sherpa del lado del servidor.
