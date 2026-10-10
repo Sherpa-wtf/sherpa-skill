@@ -34,15 +34,15 @@ Voz. Un mensaje a una sola persona no es un envío masivo.
 | Tool | Qué hace | Escribe |
 |---|---|---|
 | `list_meta_templates({ botId, q?, category?, cursor?, limit? })` | Plantillas aprobadas del bot: nombre, idioma, categoría, texto, variables (`variableIndexes`), si el encabezado exige imagen/video/documento y si falta ese archivo | No |
-| `build_audience({ botId, name, labels \| contactIds \| rows })` | Arma la audiencia desde UNA sola fuente. Devuelve `draftId`, `audienceId`, `version`, `fingerprint`, `estimatedTotal`, `limit`, `exceedsLimit` y `variableFields`. No envía nada | Audiencia, no mensajes |
+| `list_audiences({ botId?, skip?, limit? })` | Audiencias guardadas de la cuenta (id, nombre, tamaño). Nunca devuelve los contactos | No |
+| `build_audience({ botId, name, labels?, contactIds?, existingAudienceIds?, rows?, excludeContactIds? })` | Arma la audiencia desde una o varias fuentes combinables (hace falta al menos una). Devuelve `draftId`, `audienceId`, `version`, `fingerprint`, `estimatedTotal`, `limit`, `exceedsLimit`, `variableFields` y `sources` (qué aportó cada fuente y cuántos duplicados se descontaron). No envía nada | Audiencia, no mensajes |
 | `send_mass_send({ botId, draftId, audienceId, version, fingerprint, metaTemplateId, variableMapping, reason, campaignName?, labels?, scheduledAt?, allowDuplicate? })` | **Único camino para enviar.** Verifica y envía en UNA llamada (o lo programa si hay `scheduledAt`). Sin token. **No se puede deshacer.** Deja registro de auditoría con el `reason` | Sí, envía |
 | `prepare_mass_send({ botId, draftId, audienceId, version, fingerprint, metaTemplateId, variableMapping, campaignName?, labels?, scheduledAt? })` | **Vista previa opcional.** Solo muestra qué se enviaría (plantilla, total, hasta 3 mensajes armados, costo). No envía ni programa nada y no devuelve token: después no hay nada que confirmar con esta tool | Borrador, no mensajes |
 | `get_mass_send_status({ massSendId, deliveryStatus?, skip?, limit? })` | Estado, contadores y entregas por destinatario | No |
 | `list_scheduled_mass_sends({ botId?, accountId? })` | Envíos programados de la cuenta, el más próximo primero | No |
 | `cancel_scheduled_mass_send({ massSendId, accountId? })` | Cancela un envío programado antes de que salga. Es definitivo | Sí, cancela |
 
-Reglas del servidor: hasta **500 destinatarios por envío** desde el asistente; una sola fuente de
-audiencia por vez; en la V1 solo se aceptan variables numeradas del cuerpo de la plantilla (no del
+Reglas del servidor: hasta **500 destinatarios por envío** desde el asistente; la audiencia puede combinar varias fuentes (los contactos repetidos entre fuentes cuentan una sola vez); en la V1 solo se aceptan variables numeradas del cuerpo de la plantilla (no del
 encabezado ni de los botones); `build_audience` y `send_mass_send` (o la vista previa `prepare_mass_send`) se
 encadenan con los valores exactos que devolvió el paso anterior (`draftId`, `audienceId`, `version`,
 `fingerprint`): no los inventes ni uses los de una audiencia vieja.
@@ -74,7 +74,7 @@ encadenan con los valores exactos que devolvió el paso anterior (`draftId`, `au
 ```
  1. whoami → list_bots              → confirmar el bot (si es ambiguo, preguntar). Debe ser Meta.
  2. list_meta_templates             → elegir la plantilla con el usuario (ver abajo)
- 3. definir la audiencia            → UNA fuente: etiquetas, contactos o planilla (ver abajo)
+ 3. definir la audiencia            → una o varias fuentes: etiquetas, contactos, audiencias guardadas o planilla
  4. build_audience                  → no envía. Mirar estimatedTotal / exceedsLimit / variableFields
  5. mapear las variables            → qué dato va en cada {{1}}, {{2}}… (ver abajo)
  6. decir qué se va a enviar        → una línea: plantilla, personas, bot (y costo si es MARKETING)
@@ -101,16 +101,21 @@ sin pedir otra aprobación. Aclará lo que le importa:
   puede enviar desde acá: ofrecé otra plantilla o hacerlo desde la web.
 - Si no hay plantillas aprobadas, decíselo y sugerí crear una desde su panel de Sherpa.
 
-### Paso 3 — la audiencia (una sola fuente)
+### Paso 3 — la audiencia (una o varias fuentes)
 
 | Si el usuario tiene… | Fuente de `build_audience` |
 |---|---|
 | Un grupo definido por etiquetas del CRM ("los que tienen `interes_alto`") | `labels`: nombres exactos en `allOf` (todas), `anyOf` (al menos una) y `noneOf` (ninguna). `allOf` o `anyOf` necesita al menos un nombre. Verificá los nombres con `list_crm_labels` |
 | Contactos que ya identificaste (por ejemplo al leer conversaciones) | `contactIds` |
+| Una audiencia guardada de la cuenta | `existingAudienceIds` (los ids salen de `list_audiences`) |
 | Una planilla o Excel que comparte | `rows` (abajo) |
 
-No se mezclan fuentes en un mismo envío. Si el usuario quiere combinar, armá una sola fuente que
-las cubra o hacé envíos separados, siempre a pedido suyo.
+Las fuentes se pueden combinar en una misma audiencia (por ejemplo etiquetas más una planilla): el
+servidor arma un único borrador y los contactos repetidos entre fuentes cuentan una sola vez. En
+`sources` de la respuesta ves cuántos aportó cada fuente y cuántos duplicados se descontaron; usalo
+para contarle al usuario el total real. Para sacar contactos puntuales de la audiencia combinada,
+usá `excludeContactIds` (se descuentan antes de aplicar el tope de 500; `excludedCount` cuenta los
+excluidos y `notFoundExcludeContactIds` los que no estaban).
 
 **Etiquetas no disponibles:** para algunas cuentas (soporte o colaboradores con acceso restringido)
 la fuente por etiquetas devuelve error. No lo expliques en términos técnicos: ofrecé armar la

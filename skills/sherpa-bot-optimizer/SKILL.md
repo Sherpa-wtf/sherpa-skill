@@ -118,7 +118,7 @@ usuario", volvé acá en vez de improvisar el texto.
     servidor las tiene apagadas: NO pares la skill, solo se cae la edición. Ver
     `reference/contact-ai-notes.md`.
   - **Envíos masivos (Modo D):** `list_meta_templates`, `get_mass_send_status`,
-    `list_scheduled_mass_sends` (leen), `build_audience`, `send_mass_send` (el único que envía de
+    `list_scheduled_mass_sends`, `list_audiences` (leen), `build_audience`, `send_mass_send` (el único que envía de
     verdad, en una sola llamada; también programa con `scheduledAt`), `prepare_mass_send` (vista
     previa opcional: no envía ni programa nada) y `cancel_scheduled_mass_send` (escriben). Si faltan,
     el servidor las tiene apagadas: NO pares la skill, solo se cae el envío masivo. Ver
@@ -190,8 +190,8 @@ entrás al Modo A.
   `reference/conversation-labels.md`.
 
 - **Modo D — envío masivo con plantilla**: el usuario quiere mandar un mensaje de WhatsApp a muchas
-  personas con una plantilla aprobada de Meta (por etiquetas, por contactos que ya identificaste o
-  desde una planilla). Manda mensajes reales a clientes y no se puede deshacer, pero por decisión del
+  personas con una plantilla aprobada de Meta (por etiquetas, por contactos que ya identificaste,
+  con una audiencia guardada o desde una planilla, solas o combinadas). Manda mensajes reales a clientes y no se puede deshacer, pero por decisión del
   dueño de la cuenta hay **un solo camino para enviar**: una llamada (`build_audience` →
   `send_mass_send`), sin token, sin vista previa obligatoria y sin pedir reconfirmación.
   Programar es el mismo `send_mass_send` con `scheduledAt`. Aclará qué
