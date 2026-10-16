@@ -194,6 +194,8 @@ entrás al Modo A.
   con una audiencia guardada o desde una planilla, solas o combinadas). Manda mensajes reales a clientes y no se puede deshacer, pero por decisión del
   dueño de la cuenta hay **un solo camino para enviar**: una llamada (`build_audience` →
   `send_mass_send`), sin token, sin vista previa obligatoria y sin pedir reconfirmación.
+  Si el grupo se define por etiquetas, `build_audience` con `labels` es el primer paso: no listes ni
+  pagines conversaciones antes para "ver quiénes son"; el total sale en `estimatedTotal`.
   Programar es el mismo `send_mass_send` con `scheduledAt`. Aclará qué
   vas a enviar en el mismo mensaje y enviá; la ambigüedad (qué plantilla, qué audiencia, qué bot) se
   resuelve preguntando. Lo único que exige una decisión explícita es el **aviso de repetidos**: si
