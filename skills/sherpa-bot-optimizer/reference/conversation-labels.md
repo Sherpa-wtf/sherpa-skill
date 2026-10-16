@@ -190,4 +190,12 @@ Reglas de la variante autónoma:
 conversaciones que tienen esa etiqueta, y `count` cuenta ya las filtradas. Sirve para revisar lo ya
 etiquetado ("mostrame las de `interes_alto` de esta semana") o para no repetir trabajo. El filtro se
 aplica por página o por rango, así que una página puede venir con pocas filas sin que sea el final
-del listado: seguí paginando hasta que `count` venga vacío.
+del listado: seguí paginando hasta que `count` venga vacío. Si el usuario pidió todas, recorré todas
+las páginas sin frenar a preguntar si sigue: no le entregues las primeras páginas como si fueran el
+total.
+
+**Para mandarles un mensaje o saber cuántos son, no listes:** si el objetivo es un envío masivo al
+grupo de una etiqueta ("mandale a todos los que tienen `cliente activo`"), andá directo a
+`build_audience` con `labels` (Modo D, `reference/mass-send.md`). El servidor resuelve el grupo
+completo de una vez y devuelve el total en `estimatedTotal`; paginar conversaciones para eso es lento,
+cuenta conversaciones y no personas, y no sirve como audiencia.

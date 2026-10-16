@@ -105,7 +105,7 @@ sin pedir otra aprobación. Aclará lo que le importa:
 
 | Si el usuario tiene… | Fuente de `build_audience` |
 |---|---|
-| Un grupo definido por etiquetas del CRM ("los que tienen `interes_alto`") | `labels`: nombres exactos en `allOf` (todas), `anyOf` (al menos una) y `noneOf` (ninguna). `allOf` o `anyOf` necesita al menos un nombre. Verificá los nombres con `list_crm_labels` |
+| Un grupo definido por etiquetas del CRM ("los que tienen `interes_alto`") | `labels`: nombres exactos en `allOf` (todas), `anyOf` (al menos una) y `noneOf` (ninguna). `allOf` o `anyOf` necesita al menos un nombre. Verificá los nombres con `list_crm_labels`. No listes conversaciones antes: el servidor resuelve el grupo completo y el total viene en `estimatedTotal` |
 | Contactos que ya identificaste (por ejemplo al leer conversaciones) | `contactIds` |
 | Una audiencia guardada de la cuenta | `existingAudienceIds` (los ids salen de `list_audiences`) |
 | Una planilla o Excel que comparte | `rows` (abajo) |
