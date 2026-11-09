@@ -1,14 +1,14 @@
 # Métricas — leer los números y contárselos al corredor
 
-Cinco tools de solo lectura que devuelven **números agregados** (no conversaciones). No escriben
+Seis tools de solo lectura que devuelven **números agregados** (no conversaciones). No escriben
 nada: se pueden usar sin gates. Sirven para dos cosas: **reportarle al usuario cómo viene su
 operación** (Modo B del workflow) y **decidir dónde mirar** antes de leer conversaciones (Modo A).
 
-Tres son **por bot** (toman `botId`) y dos son **por broker** — los rechazos son de la cuenta, no
+Cuatro son **por bot** (toman `botId`; la de ventas toma `botIds`) y dos son **por broker** — los rechazos son de la cuenta, no
 de un bot puntual, así que no les pases un `botId`. Todas aceptan un rango opcional `from`/`to`
 en ISO 8601.
 
-## Las cinco tools
+## Las seis tools
 
 ### `get_bot_documentation_metrics({ botId, from?, to? })` — envío de documentación
 
@@ -67,7 +67,26 @@ viejo, con `counters` de cada uno (total, enviados, entregados, leídos, fallido
 `templateName`, `status` y `sendAt`. Página acotada: default 20, máximo 50; si `truncated` viene
 `true` hubo más en el rango — acotá con `from`/`to` en vez de subir el `limit`.
 
-## Los cuatro errores de interpretación (no los cometas)
+### `get_bot_sales_metrics({ botIds, from, to })` — ventas del agente de ventas
+
+Lo que vendió el agente de ventas (multicotizador) en el período, en pesos. `botIds` es una lista
+separada por comas (uno o varios asistentes de la cuenta); `from` y `to` son **obligatorios**
+(fechas `YYYY-MM-DD`, días argentinos, ambos incluidos). Devuelve tres etapas y un ranking:
+
+- `cotizadas` — `cotizaciones` (cuántas se hicieron), `ofertas` (cuántas ofertas se le presentaron
+  a la gente en total) y la `prima` y el `premio` que suman esas ofertas.
+- `aceptadas` — `cotizaciones` en las que la persona **eligió** una oferta, y la `prima` y el
+  `premio` de las ofertas elegidas.
+- `emitidas` — `cantidad` de pólizas que completaron el flujo de emisión (fotos, datos y medio de
+  pago en el formulario del asistente), y su `prima` y `premio`.
+- `planesMasElegidos` — ranking de aseguradora + cobertura entre las aceptadas, con `cantidad`,
+  `primaPromedio` y `premioPromedio`. Hasta 10, de más a menos elegidos.
+
+**Prima** es el monto sin impuestos y **premio** el monto con impuestos. Cada hecho cuenta en el
+período en que ocurrió: una cotización de octubre emitida en noviembre suma a la emisión de
+noviembre.
+
+## Los cinco errores de interpretación (no los cometas)
 
 **1. `sinDatos: true` NO es cero por ciento.** Significa que en ese rango no hubo ningún evento.
 Puede ser que el bot no tenga flujos de documentación, o que simplemente no haya tenido tráfico.
@@ -96,6 +115,16 @@ nombrá el resto como lo que es: rechazos que todavía no se pudieron identifica
 dice cómo interpretarlos (si son acumulativos o excluyentes). Leelo antes de hacer cualquier cuenta
 propia; no restes ni sumes columnas por tu cuenta. Si un envío trae `countersStale: true`, sus
 números pueden estar desactualizados: mencionalo como aproximado o no lo incluyas en el total.
+
+**5. Lo cotizado no es plata vendida.** `cotizadas.prima` y `cotizadas.premio` suman **todas las
+ofertas que se presentaron**, y una cotización trae varias (una persona ve 3 o 4 coberturas). El
+total es el volumen que el asistente puso sobre la mesa, no lo que se va a cobrar. Para hablar de
+plata real usá `emitidas`. Si el usuario pregunta "cuánto cotizó", decile también cuántas
+cotizaciones fueron y el promedio por oferta (`premio / ofertas`). Todo en cero no es una falla:
+puede ser que el bot no haya cotizado en ese período o que no use el agente de ventas; no lo
+presentes como "tu asistente no vendió nada" sin mirar antes un rango más amplio. Y hoy las
+emisiones son solo de Mercantil Andina: si hay cotizaciones de otras aseguradoras, `emitidas` no las
+incluye todavía.
 
 ## Cómo usarlas para dirigir el análisis (Modo A)
 
