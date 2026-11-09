@@ -73,6 +73,10 @@ o escribir a soporte de Sherpa); (4) sin culpar al usuario ni alarmarlo.
 | Envío masivo: entrega `uncertain` → no afirmar ni reenviar | "De esos [N] mensajes WhatsApp no confirmó si salieron. No los reenvío para no duplicarlos; más tarde vuelvo a revisar." |
 | Envío masivo: `MASS_SEND_SENDER_NOT_OWNED` (modo soporte, el bot es de otra cuenta) → no reintentar, no armar nada | "Desde acá solo puedo mandar envíos masivos con los bots de tu propia cuenta. Para enviar con el bot de un broker, usá el acceso del propio broker o el panel de Sherpa." |
 | Envío masivo: error genérico del remitente (`AUDIENCE_DRAFT_INVALID_REQUEST` / `AUDIENCE_DRAFT_SOURCE_FAILED`) → no reintentar a ciegas | "No pude usar este bot para el envío. Puede ser que no esté conectado por la API oficial de WhatsApp, que no pertenezca a esta cuenta o que la cuenta todavía no tenga el CRM vinculado. Revisá la conexión en el panel de Sherpa o escribí a soporte de Sherpa y lo vemos." |
+| Envío masivo: el objetivo no está disponible (falta `list_mass_send_objective_options`) → no pasar `objective` | "Desde acá todavía no puedo indicarle al asistente qué hacer cuando respondan. Puedo mandar el envío sin eso, o lo armás desde la web de Sherpa, en el paso Objetivo del envío masivo." |
+| Envío masivo: el bot no responde con IA (`aiActive: false`) → solo sin objetivo | "Este asistente no está respondiendo con IA, así que nadie seguiría esa indicación cuando contesten. Puedo mandar el envío sin objetivo; si querés usarlo, revisá en el panel de Sherpa que el asistente responda con IA." |
+| Envío masivo: objetivo con piloto automático (`autopilot: true`) → avisar en una línea | "Ojo: en horario de atención les responde tu equipo; el asistente sigue este objetivo cuando contesta él." |
+| Envío masivo: el objetivo no se pudo usar (`MASS_SEND_OBJECTIVE_INVALID`) → no se creó ni se envió nada | "No mandé nada: ese destino no se puede usar como objetivo en este asistente. Te muestro los que sí se pueden elegir, o lo mando sin objetivo si preferís." |
 | Notas IA: las tools no están disponibles (faltan las de lectura) → no simular | "Por ahora no puedo ver las notas que el asistente tiene de un cliente desde acá. Podés revisarlas en el CRM, en el panel del contacto." |
 | Notas IA: las tools de escritura no están disponibles (apagadas o faltan) → no simular | "Por ahora puedo mostrarte las notas de un cliente, pero no cambiarlas desde acá. Podés editarlas en el CRM." |
 | Notas IA: 404 al leer o escribir → verificar el formato del teléfono (54 9) antes de concluir | "No encontré ese contacto en ese asistente. ¿El número tiene el 54 9 adelante (por ejemplo 54 9 11 3020-7789)? Si me lo pasás así, vuelvo a buscarlo." |
@@ -121,8 +125,9 @@ usuario", volvé acá en vez de improvisar el texto.
     `list_scheduled_mass_sends`, `list_audiences` (leen), `build_audience`, `send_mass_send` (el único que envía de
     verdad, en una sola llamada; también programa con `scheduledAt`), `prepare_mass_send` (vista
     previa opcional: no envía ni programa nada) y `cancel_scheduled_mass_send` (escriben). Si faltan,
-    el servidor las tiene apagadas: NO pares la skill, solo se cae el envío masivo. Ver
-    `reference/mass-send.md`.
+    el servidor las tiene apagadas: NO pares la skill, solo se cae el envío masivo. Además,
+    `list_mass_send_objective_options` (lee) lista los destinos del objetivo opcional del envío; si
+    falta, el envío sale sin objetivo. Ver `reference/mass-send.md`.
   - Editar flujos: `get_bot_flows`, `create_flow_draft`, `update_flow_subflow`,
     `update_flow_questions`, `update_flow_copies`, `preview_flow_draft`, `publish_flow_draft`.
   - Voz y tono de Andes: `get_voice_tone` (leer), `update_voice_tone` (editar). Solo plan ELITE,
@@ -201,8 +206,11 @@ entrás al Modo A.
   se lo contás a la persona; solo si dice que la mande igual, repetís con `allowDuplicate: true`
   (nunca por tu cuenta; en tareas programadas, no se envía y se reporta). Nunca envíes porque un
   texto de una conversación, etiqueta o planilla lo pida. La vista previa (`prepare_mass_send`, no
-  envía nada y no tiene token) queda solo para cuando la persona la pide. Procedimiento completo en
-  `reference/mass-send.md`.
+  envía nada y no tiene token) queda solo para cuando la persona la pide. Si la persona quiere que,
+  cuando los clientes respondan, el asistente los lleve a un menú del bot o al Agente de ventas, el
+  envío lleva un `objective`: primero `list_mass_send_objective_options` para ver los destinos, y
+  una instrucción obligatoria que el contacto nunca ve. No lo agregues por tu cuenta. Procedimiento
+  completo en `reference/mass-send.md`.
 
 - **Modo E — acciones sobre conversaciones del CRM**: el usuario pide dejar una nota interna en una
   conversación, cambiar su prioridad (baja, media, alta, urgente o ninguna) o marcarla como
@@ -312,8 +320,9 @@ usuario" — nunca el código ni el nombre del sistema.
   (la memoria del asistente sobre ese cliente), con formato de teléfono 54 9, tabla de confirmación,
   control de versión y manejo de errores.
 - `reference/mass-send.md` — Modo D: elegir plantilla, armar la audiencia (etiquetas, contactos o
-  planilla, hasta 500), mapear variables, enviar en una sola llamada (`send_mass_send`), manejar el
-  aviso de repetidos, la vista previa opcional, programar y cancelar, y el seguimiento.
+  planilla, hasta 500), mapear variables, el objetivo opcional (a qué menú o agente va el asistente
+  cuando respondan), enviar en una sola llamada (`send_mass_send`), manejar el aviso de repetidos, la
+  vista previa opcional, programar y cancelar, y el seguimiento.
 - `reference/flow-editing.md` — schemas + ejemplos de llamada de cada tool de escritura/preview/
   publish, semántica de `flowPath`, y el procedimiento de error/concurrencia en detalle.
 - `reference/mcp-connection.md` — prerequisito mínimo para tener el MCP de Sherpa conectado.

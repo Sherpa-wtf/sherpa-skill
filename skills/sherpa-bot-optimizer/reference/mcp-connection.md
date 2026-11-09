@@ -56,6 +56,10 @@ build_audience, send_mass_send, prepare_mass_send, cancel_scheduled_mass_send
 > escriben (`MCP_MASS_SEND_WRITE=false`): si faltan, el envío masivo no está habilitado; seguí
 > con el resto de la skill y no simules el envío. Ver `reference/mass-send.md`.
 >
+> `list_mass_send_objective_options` (lectura) habilita el objetivo opcional del envío masivo y no
+> está en la lista de arriba: un servidor anterior no la tiene. Si falta, no pares: el envío sale
+> sin objetivo y no se pasa `objective`. Ver "Objetivo del envío" en `reference/mass-send.md`.
+>
 > Las cinco tools de métricas (`get_bot_documentation_metrics`, `get_bot_resolution_rate`,
 > `get_bot_mass_sends`, `get_broker_rejections`, `get_rejections_by_broker`) habilitan el Modo B
 > (reportar números). Si faltan, el resto de la skill funciona igual: seguí con el Modo A y no le
