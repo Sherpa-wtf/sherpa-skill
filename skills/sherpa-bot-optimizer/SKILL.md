@@ -103,7 +103,9 @@ usuario", volvé acá en vez de improvisar el texto.
   - **Métricas del bot (números agregados, solo lectura, sin gates):**
     `get_bot_documentation_metrics` (pólizas y cupones pedidos/entregados),
     `get_bot_resolution_rate` (qué porción de las conversaciones se resuelve, y por flujo),
-    `get_bot_mass_sends` (envíos masivos realizados y cómo les fue).
+    `get_bot_mass_sends` (envíos masivos realizados y cómo les fue),
+    `get_bot_sales_metrics` (ventas del agente de ventas: prima y premio cotizado, aceptado y emitido,
+    y los planes más elegidos).
   - **Rechazos de la cuenta (por broker, no por bot):** `get_broker_rejections` (cargados vs.
     notificados, por aseguradora) y `get_rejections_by_broker` (ranking de todos los brokers,
     solo god_mode).
@@ -306,8 +308,8 @@ usuario" — nunca el código ni el nombre del sistema.
 
 - `reference/analysis-playbook.md` — cómo convertir los resúmenes de conversaciones en errores,
   oportunidades y recomendaciones concretas de flujo; la regla de costo summary-antes-de-full.
-- `reference/metrics-reporting.md` — las cinco tools de métricas (documentación, resolución y
-  envíos masivos por bot; rechazos por broker), los cuatro errores de interpretación, y cómo
+- `reference/metrics-reporting.md` — las seis tools de métricas (documentación, resolución,
+  envíos masivos y ventas del agente por bot; rechazos por broker), los cuatro errores de interpretación, y cómo
   contarle los números al corredor.
 - `reference/conversation-labels.md` — Modo C: listar y crear etiquetas del CRM y ponerlas o
   quitarlas a conversaciones en dos pasos (resumen sin escribir + aprobación humana) o, en tareas
