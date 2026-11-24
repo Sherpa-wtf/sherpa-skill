@@ -134,6 +134,9 @@ usuario", volvé acá en vez de improvisar el texto.
     `update_flow_questions`, `update_flow_copies`, `preview_flow_draft`, `publish_flow_draft`.
   - Voz y tono de Andes: `get_voice_tone` (leer), `update_voice_tone` (editar). Solo plan ELITE,
     salvo 3 keys limitadas (`saludoInicial`/`despedidaFinal`/`fueraDeHorario`). Ver `reference/flow-editing.md`.
+  - Agente de ventas: `get_sales_agent_config` (lee la configuración ramo por ramo) y
+    `update_sales_agent_config` (edita UN ramo del borrador). Son opcionales: si faltan, NO pares la
+    skill, solo se cae la edición del Agente de ventas. Ver `reference/flow-editing.md` §7.
 - Si falta alguna tool de Chatwoot, la conexión está desactualizada (interno). PARAR.
 - Las tools de **métricas y rechazos** son la excepción: si faltan, NO pares — se cae el Modo B (o
   la parte que falte) y el resto funciona igual. Interno: la conexión es de una versión anterior.
@@ -326,7 +329,9 @@ usuario" — nunca el código ni el nombre del sistema.
   cuando respondan), enviar en una sola llamada (`send_mass_send`), manejar el aviso de repetidos, la
   vista previa opcional, programar y cancelar, y el seguimiento.
 - `reference/flow-editing.md` — schemas + ejemplos de llamada de cada tool de escritura/preview/
-  publish, semántica de `flowPath`, y el procedimiento de error/concurrencia en detalle.
+  publish, semántica de `flowPath`, el procedimiento de error/concurrencia en detalle, la voz y tono
+  y la configuración del Agente de ventas por ramo (modo, aseguradoras, etiquetas, colaboradores,
+  reglas de negocio, datos adicionales e instrucciones).
 - `reference/mcp-connection.md` — prerequisito mínimo para tener el MCP de Sherpa conectado.
 
 ## Notas de portabilidad

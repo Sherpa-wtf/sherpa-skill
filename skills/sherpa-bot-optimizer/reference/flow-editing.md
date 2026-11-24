@@ -6,6 +6,8 @@ Tabla de contenidos:
 3. Preview + publish (dos pasos)
 4. Semántica de `flowPath`
 5. Procedimiento de error y concurrencia
+6. Editar la voz y tono del asistente
+7. Configurar el Agente de ventas (por ramo)
 
 Todas las tools las expone el servidor MCP de Sherpa conectado. El MCP reenvía tu identidad a
 Genesis, que enforcea el alcance del lado del servidor (accessMode `self` → solo tus propios bots).
@@ -189,3 +191,72 @@ Si editás una key ELITE sin el plan, `update_voice_tone` devuelve **`isError: t
 - Explicá en **lenguaje amable** qué requiere un plan superior y listá los nombres de
   `recommendedPlans[].name` (fila "plan superior" de la tabla "Voz hacia el usuario").
 - **No inventes precios**; si el usuario quiere avanzar, derivalo al panel de suscripción de Sherpa.
+
+---
+
+## 7. Configurar el Agente de ventas (por ramo)
+
+El Agente de ventas cotiza y atiende por ramo (Auto, Moto, Hogar, Tecnología, Movilidad, Bolso,
+Técnico, Incendio) y tiene además ramos que se atienden solo de forma manual (AP, Comercio, Hogar para
+alquilar, las cauciones, Mala praxis, ART y Granizo). Se edita en el borrador, igual que los flujos:
+`create_flow_draft` → leer → editar → `preview_flow_draft` → `publish_flow_draft` (dos pasos). El
+cambio no llega a producción hasta ese publish.
+
+### `get_sales_agent_config`  — input: `{ draftId: string, flowKey?: string }`
+Devuelve la configuración ramo por ramo. Para cada ramo que cotiza:
+`attentionMode` (`automatica` o `manual`), `puedeSerAutomatica`, `quoteCompanies` (las aseguradoras
+seleccionadas), `aseguradorasDisponibles` (las que se pueden elegir para ese ramo), etiquetas y
+colaboradores asignados, `businessRules`, `additionalInstructions`, `datosAdicionales` (claves
+elegidas, cuándo se piden y datos propios) y `datosAdicionalesDisponibles` (el catálogo del ramo).
+Los ramos manuales traen etiquetas, colaboradores, instrucciones y su lista de datos. Al final vienen
+`etiquetasDisponibles` y `colaboradoresDisponibles`: de ahí salen los ids para editar.
+`flowKey` solo hace falta si el bot tiene más de un Agente de ventas (el error lo avisa).
+
+### `update_sales_agent_config`  — input: `{ draftId, ramo, flowKey?, ...cambios }`
+Cambia UN ramo por llamada; los demás no se tocan. Todos los cambios son opcionales y lo que se envía
+**reemplaza** lo guardado (una lista vacía lo vacía):
+
+| Campo | Qué cambia |
+|---|---|
+| `attentionMode` | `automatica` o `manual`. En automática el ramo necesita al menos una aseguradora habilitada. |
+| `quoteCompanies` | Códigos de las aseguradoras con las que cotiza (por ejemplo `MERCANTIL_ANDINA`; en Auto y Moto también las de Woker). Solo se aceptan las de `aseguradorasDisponibles`. |
+| `labelIds` / `collaboratorIds` | Etiquetas y colaboradores a los que se deriva al terminar la cotización. Ids de `etiquetasDisponibles` y `colaboradoresDisponibles`. |
+| `businessRules` | Criterios para mostrar las cotizaciones (hasta 1000 caracteres). Vacío las quita. |
+| `additionalInstructions` | Contexto del ramo para el agente (hasta 10000 caracteres). |
+| `additionalData` | `keys` (datos adicionales del catálogo del ramo), `timing` (`before` los pide antes de cotizar, `after` después de que la persona acepta) y `custom` (datos propios: `label` y una pregunta de ejemplo, hasta 20). |
+| `dataFields` | Lista completa de datos cuando el ramo está en manual o es un ramo sin cotizador (hasta 20). |
+
+Los ramos sin cotizador solo aceptan `labelIds`, `collaboratorIds`, `additionalInstructions` y
+`dataFields`.
+
+```
+update_sales_agent_config({
+  draftId: "<draftId>", ramo: "HOGAR",
+  attentionMode: "automatica", quoteCompanies: ["MERCANTIL_ANDINA"],
+  additionalData: { keys: ["sumaContenido"], timing: "before" }
+})
+```
+
+### Cómo trabajarlo
+1. Leé la configuración (`get_sales_agent_config`) antes de proponer cambios, y mostrale a la persona
+   lo que hay hoy del ramo en lenguaje llano.
+2. **GATE 1 (humano):** presentá los cambios del ramo ("Hogar pasa a automática con Mercantil Andina y
+   pide el valor del contenido antes de cotizar") y esperá la aprobación. Un ramo por vez.
+3. Editá. Si la respuesta trae `notes` o `warnings`, **contáselos**: son cosas que el servidor hizo por
+   su cuenta (por ejemplo, pasar un ramo a manual saca las aseguradoras seleccionadas y apaga la emisión
+   automática) y la persona tiene que saberlo.
+4. Publicá con los dos pasos de la sección 3. Ese publish aplica todo el borrador.
+
+### Lo que NO se puede hacer desde acá
+- **Conectar o desconectar aseguradoras:** las credenciales y la suscripción se manejan en el panel.
+  Desde el MCP solo se eligen, entre las ya habilitadas para el ramo, las que cotizan (`quoteCompanies`).
+  Una habilitada no significa que sus credenciales funcionen: eso no se verifica al guardar.
+- **Modo híbrido:** está oculto en el producto; solo `automatica` y `manual`.
+- **Ramos con multicotizador propio** (el del broker): su modo y aseguradoras se cambian en el panel.
+- **Un bot sin Agente de ventas o sin su configuración inicial:** se crea una vez desde el panel.
+
+### Errores
+Un pedido inválido (aseguradora no habilitada, etiqueta o colaborador que no existe, un dato adicional
+que el ramo no tiene, un texto demasiado largo) responde con error y **no guarda nada**: el mensaje
+trae la lista de opciones válidas. Corregí con esas opciones; no inventes ids ni códigos.
+Nunca pases ni pidas credenciales, claves ni códigos de productor.
